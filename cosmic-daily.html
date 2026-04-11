@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Cosmic Daily ✦</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+    :root {
+      --glass-bg: rgba(255,255,255,0.07);
+      --glass-border: rgba(255,255,255,0.14);
+      --card-bg: rgba(255,255,255,0.05);
+      --card-border: rgba(255,255,255,0.10);
+      --text-primary: rgba(255,255,255,0.95);
+      --text-secondary: rgba(255,255,255,0.58);
+      --text-muted: rgba(255,255,255,0.35);
+      --accent: #c8a8ff;
+      --accent-warm: #ffb8a0;
+    }
+
+    html, body {
+      min-height: 100%;
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', system-ui, sans-serif;
+      color: var(--text-primary);
+      background: #06000f;
+      overflow-x: hidden;
+    }
+
+    /* ── BACKGROUND ─────────────────────────────────────── */
+    .bg {
+      position: fixed; inset: 0; z-index: 0; overflow: hidden;
+    }
+    .bg-mesh {
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 90% 70% at 15% 15%, rgba(110,40,210,0.45) 0%, transparent 55%),
+        radial-gradient(ellipse 60% 60% at 85% 8%,  rgba(30,80,210,0.35) 0%, transparent 55%),
+        radial-gradient(ellipse 70% 60% at 75% 82%, rgba(190,40,110,0.28) 0%, transparent 55%),
+        radial-gradient(ellipse 55% 55% at 5%  80%, rgba(30,110,190,0.28) 0%, transparent 55%),
+        radial-gradient(ellipse 40% 40% at 50% 50%, rgba(80,20,160,0.20) 0%, transparent 60%),
+        linear-gradient(150deg, #08001c 0%, #0b0b28 50%, #06000f 100%);
+      animation: meshDrift 14s ease-in-out infinite alternate;
+    }
+    @keyframes meshDrift {
+      0%   { filter: hue-rotate(0deg)  brightness(1);    transform: scale(1); }
+      100% { filter: hue-rotate(18deg) brightness(1.06); transform: scale(1.04); }
+    }
+    .stars {
+      position: absolute; inset: 0;
+      background-image:
+        radial-gradient(1.2px 1.2px at  8% 12%, rgba(255,255,255,.7) 0%, transparent 100%),
+        radial-gradient(1px   1px   at 22% 58%, rgba(255,255,255,.4) 0%, transparent 100%),
+        radial-gradient(1.5px 1.5px at 38%  7%, rgba(255,255,255,.6) 0%, transparent 100%),
+        radial-gradient(1px   1px   at 52% 42%, rgba(255,255,255,.35)0%, transparent 100%),
+        radial-gradient(2px   2px   at 65% 22%, rgba(255,255,255,.65)0%, transparent 100%),
+        radial-gradient(1px   1px   at 80% 68%, rgba(255,255,255,.4) 0%, transparent 100%),
+        radial-gradient(1.2px 1.2px at 14% 82%, rgba(255,255,255,.55)0%, transparent 100%),
+        radial-gradient(1px   1px   at 91% 13%, rgba(255,255,255,.3) 0%, transparent 100%),
+        radial-gradient(1.8px 1.8px at 30% 73%, rgba(255,255,255,.7) 0%, transparent 100%),
+        radial-gradient(1px   1px   at 57% 88%, rgba(255,255,255,.5) 0%, transparent 100%),
+        radial-gradient(1px   1px   at 76% 48%, rgba(255,255,255,.38)0%, transparent 100%),
+        radial-gradient(1.4px 1.4px at 46% 28%, rgba(255,255,255,.62)0%, transparent 100%),
+        radial-gradient(1px   1px   at  3% 47%, rgba(255,255,255,.32)0%, transparent 100%),
+        radial-gradient(1px   1px   at 87% 38%, rgba(255,255,255,.48)0%, transparent 100%),
+        radial-gradient(1.6px 1.6px at 19% 33%, rgba(255,255,255,.42)0%, transparent 100%),
+        radial-gradient(1px   1px   at 68% 75%, rgba(255,255,255,.36)0%, transparent 100%),
+        radial-gradient(2px   2px   at 43% 95%, rgba(255,255,255,.55)0%, transparent 100%),
+        radial-gradient(1px   1px   at 95% 60%, rgba(255,255,255,.4) 0%, transparent 100%);
+      animation: twinkle 7s ease-in-out infinite alternate;
+    }
+    @keyframes twinkle {
+      0%   { opacity: .65; }
+      100% { opacity: 1; }
+    }
+
+    /* ── LAYOUT ──────────────────────────────────────────── */
+    .screen {
+      position: relative; z-index: 1;
+      min-height: 100dvh;
+      display: flex; flex-direction: column; align-items: center;
+      padding: env(safe-area-inset-top, 60px) 18px env(safe-area-inset-bottom, 40px);
+    }
+    .screen.hidden { display: none; }
+
+    /* ── GLASS SURFACE ───────────────────────────────────── */
+    .glass {
+      background: var(--glass-bg);
+      backdrop-filter: blur(28px) saturate(200%) brightness(1.1);
+      -webkit-backdrop-filter: blur(28px) saturate(200%) brightness(1.1);
+      border: 1px solid var(--glass-border);
+      border-radius: 26px;
+      box-shadow: 0 8px 40px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.12);
+    }
+    .glass-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(20px) saturate(160%);
+      -webkit-backdrop-filter: blur(20px) saturate(160%);
+      border: 1px solid var(--card-border);
+      border-radius: 22px;
+      box-shadow: 0 4px 20px rgba(0,0,0,.22), inset 0 1px 0 rgba(255,255,255,.07);
+    }
+
+    /* ── ONBOARDING ──────────────────────────────────────── */
+    #onboarding {
+      justify-content: center;
+      gap: 28px;
+      padding-top: 80px;
+      padding-bottom: 60px;
+    }
+    .hero { text-align: center; }
+    .app-icon {
+      font-size: 76px;
+      display: block;
+      margin-bottom: 22px;
+      filter: drop-shadow(0 0 28px rgba(200,168,255,.7));
+      animation: float 4s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%,100% { transform: translateY(0); }
+      50%      { transform: translateY(-12px); }
+    }
+    .app-title {
+      font-size: 38px; font-weight: 700; letter-spacing: -.6px;
+      background: linear-gradient(130deg, #fff 0%, #c8a8ff 45%, #ffb8a0 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 12px;
+    }
+    .app-subtitle {
+      font-size: 16px; color: var(--text-secondary);
+      line-height: 1.6; max-width: 290px; margin: 0 auto;
+    }
+    .onboard-card {
+      width: 100%; max-width: 370px; padding: 28px 26px;
+    }
+    .onboard-card h2 { font-size: 20px; font-weight: 600; margin-bottom: 6px; }
+    .onboard-card p  { font-size: 14px; color: var(--text-secondary); line-height: 1.55; margin-bottom: 24px; }
+    .field-label {
+      font-size: 12px; font-weight: 600; letter-spacing: .8px;
+      text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px;
+    }
+    .date-input {
+      width: 100%;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: 16px;
+      padding: 15px 18px;
+      font-size: 17px; font-weight: 500; color: #fff;
+      margin-bottom: 22px; outline: none;
+      transition: border-color .2s, background .2s;
+      -webkit-appearance: none; font-family: inherit;
+      color-scheme: dark;
+    }
+    .date-input:focus {
+      border-color: rgba(200,168,255,.55);
+      background: rgba(255,255,255,.10);
+    }
+    .btn-primary {
+      width: 100%;
+      background: linear-gradient(135deg, rgba(200,168,255,.28), rgba(255,184,160,.18));
+      border: 1px solid rgba(200,168,255,.38);
+      backdrop-filter: blur(10px);
+      color: #fff; font-size: 17px; font-weight: 600;
+      padding: 16px; border-radius: 18px;
+      cursor: pointer; transition: all .22s; font-family: inherit; letter-spacing: .2px;
+    }
+    .btn-primary:hover  { background: linear-gradient(135deg,rgba(200,168,255,.42),rgba(255,184,160,.28)); transform: translateY(-1px); box-shadow: 0 8px 28px rgba(200,168,255,.22); }
+    .btn-primary:active { transform: translateY(0); }
+
+    /* ── READING HEADER ─────────────────────────────────── */
+    #reading { gap: 14px; padding-top: 56px; padding-bottom: 48px; }
+    .reading-header { width: 100%; max-width: 420px; text-align: center; margin-bottom: 4px; }
+    .reading-date   { font-size: 12px; color: var(--text-muted); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 6px; }
+    .reading-title  { font-size: 26px; font-weight: 700; letter-spacing: -.3px; }
+    .signs-row      { display: flex; justify-content: center; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+    .badge {
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.11);
+      backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+      border-radius: 20px; padding: 5px 13px;
+      font-size: 13px; color: var(--text-secondary);
+      display: flex; align-items: center; gap: 5px;
+    }
+
+    /* ── CATEGORY GRID ──────────────────────────────────── */
+    .cat-grid {
+      width: 100%; max-width: 420px;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+    }
+    .cat-card { padding: 17px 16px; display: flex; flex-direction: column; gap: 9px; }
+    .cat-head { display: flex; align-items: center; gap: 8px; }
+    .cat-icon { font-size: 21px; filter: drop-shadow(0 2px 6px rgba(200,168,255,.4)); }
+    .cat-name { font-size: 11px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: .9px; }
+    .dots     { display: flex; gap: 4px; }
+    .dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: rgba(255,255,255,.13); transition: background .3s;
+    }
+    .dot.on { background: var(--dc); box-shadow: 0 0 6px var(--dc); }
+    .rating-label { font-size: 11px; color: var(--text-muted); font-weight: 500; letter-spacing: .3px; }
+    .cat-msg { font-size: 12.5px; color: var(--text-secondary); line-height: 1.55; }
+
+    /* rating colour tokens */
+    .r1 { --dc: #ff6b6b; } .r2 { --dc: #ffaa5a; } .r3 { --dc: #ffd166; }
+    .r4 { --dc: #7ae7b8; } .r5 { --dc: #c8a8ff; }
+
+    /* ── ORACLE CARD ────────────────────────────────────── */
+    .oracle-card { width: 100%; max-width: 420px; padding: 24px 22px; }
+    .oracle-lbl {
+      font-size: 11px; font-weight: 600; letter-spacing: 1.6px;
+      text-transform: uppercase; color: var(--accent); opacity: .8; margin-bottom: 14px;
+    }
+    .oracle-text { font-size: 16px; line-height: 1.7; color: var(--text-primary); }
+
+    /* ── SUGGESTION CARD ────────────────────────────────── */
+    .suggest-card {
+      width: 100%; max-width: 420px; padding: 18px 20px;
+      display: flex; align-items: flex-start; gap: 14px;
+    }
+    .suggest-icon {
+      width: 42px; height: 42px; flex-shrink: 0;
+      background: rgba(200,168,255,.14); border-radius: 13px;
+      display: flex; align-items: center; justify-content: center; font-size: 20px;
+    }
+    .suggest-lbl {
+      font-size: 11px; font-weight: 600; letter-spacing: 1.5px;
+      text-transform: uppercase; color: var(--accent-warm); opacity: .8; margin-bottom: 6px;
+    }
+    .suggest-text { font-size: 14.5px; color: var(--text-secondary); line-height: 1.55; }
+
+    /* ── FOOTER ─────────────────────────────────────────── */
+    .reading-footer {
+      width: 100%; max-width: 420px;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 6px 4px; margin-top: 2px;
+    }
+    .footer-info { font-size: 12px; color: var(--text-muted); }
+    .btn-reset {
+      background: none; border: none; font-size: 12px; color: var(--text-muted);
+      cursor: pointer; font-family: inherit; text-decoration: underline;
+      text-underline-offset: 2px; padding: 4px; transition: color .2s;
+    }
+    .btn-reset:hover { color: var(--text-secondary); }
+
+    /* ── ANIMATIONS ─────────────────────────────────────── */
+    .fade-up { animation: fadeUp .55s ease both; }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .d0 { animation-delay: 0s;    }
+    .d1 { animation-delay: .08s;  }
+    .d2 { animation-delay: .16s;  }
+    .d3 { animation-delay: .24s;  }
+    .d4 { animation-delay: .32s;  }
+    .d5 { animation-delay: .40s;  }
+    .d6 { animation-delay: .48s;  }
+    .d7 { animation-delay: .56s;  }
+  </style>
+</head>
+<body>
+
+<!-- BACKGROUND -->
+<div class="bg">
+  <div class="bg-mesh"></div>
+  <div class="stars"></div>
+</div>
+
+<!-- ═══════════ ONBOARDING ═══════════ -->
+<div id="onboarding" class="screen hidden">
+  <div class="hero fade-up d0">
+    <span class="app-icon">✦</span>
+    <h1 class="app-title">Cosmic Daily</h1>
+    <p class="app-subtitle">Your personal oracle — calibrated to the stars, the moon, and the particular chaos of being you.</p>
+  </div>
+
+  <div class="glass onboard-card fade-up d2">
+    <h2>Begin your reading</h2>
+    <p>Enter your date of birth once. The cosmos will remember it for you.</p>
+
+    <div class="field-label">Your date of birth</div>
+    <input type="date" id="bday-input" class="date-input" />
+
+    <button class="btn-primary" onclick="startReading()">✦ &nbsp;Reveal My Destiny</button>
+  </div>
+</div>
+
+<!-- ═══════════ READING ═══════════ -->
+<div id="reading" class="screen hidden">
+
+  <div class="reading-header fade-up d0">
+    <div class="reading-date"  id="r-date"></div>
+    <div class="reading-title" id="r-title"></div>
+    <div class="signs-row"     id="r-signs"></div>
+  </div>
+
+  <div class="cat-grid" id="cat-grid"></div>
+
+  <div class="glass oracle-card fade-up d5" id="oracle-card">
+    <div class="oracle-lbl">✦ &nbsp;Today's Oracle</div>
+    <div class="oracle-text" id="oracle-text"></div>
+  </div>
+
+  <div class="glass-card suggest-card fade-up d6">
+    <div class="suggest-icon">🎯</div>
+    <div>
+      <div class="suggest-lbl">Cosmic Suggestion</div>
+      <div class="suggest-text" id="suggest-text"></div>
+    </div>
+  </div>
+
+  <div class="reading-footer fade-up d7">
+    <span class="footer-info" id="r-footer"></span>
+    <button class="btn-reset" onclick="resetBday()">Change birthday</button>
+  </div>
+
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+//  CONTENT DATABASE
+// ═══════════════════════════════════════════════════════════════
+const C = {
+  work: {
+    icon: "💼", name: "Work & Career",
+    m: {
+      1: [
+        "The cosmic gears are jammed today. Submit nothing important, sign nothing legally binding, and avoid your boss if at all possible.",
+        "Your productivity has the energy of a browser with 47 tabs open. Close some tabs. Maybe close your laptop.",
+        "Mercury is in retrograde energy — even if it isn't. Your ideas are fine; the timing is genuinely not.",
+        "Today the stars vote for strategic invisibility. Be the human equivalent of 'on a call.'"
+      ],
+      2: [
+        "Minor celestial friction in your career lane. Push through carefully — the path clears by afternoon.",
+        "The stars aren't against you today, they're just… indifferent. Same as your coworkers. You'll survive.",
+        "Your work energy is at 60%. Fortunately, most things only need 60%.",
+        "One step forward, one step sideways. The universe is teaching you the cha-cha of professional life."
+      ],
+      3: [
+        "A steady, unremarkable day at work. The universe calls this 'acceptable.' So do most performance reviews.",
+        "No great breakthroughs, no disasters. The cosmic middle ground — which is honestly underrated.",
+        "Solid. Functional. Mildly caffeinated. A perfectly serviceable work day with cosmic backing.",
+        "The stars see average output and are totally at peace with that. Not every day needs to be legendary."
+      ],
+      4: [
+        "The cosmic current carries your career forward. Push on anything you've been hesitating about.",
+        "Good energy flows through your professional life. The stars are watching with quiet approval.",
+        "You're operating with unusual clarity today. Use it. The universe doesn't always pick up when you call.",
+        "Decisions made today have solid cosmic backing. Trust your professional instincts."
+      ],
+      5: [
+        "The stars have cleared your lane entirely. Everything you touch today has a touch of gold — don't waste it.",
+        "Cosmic alignment: maximum. Your professional presence today is genuinely formidable. Let people know.",
+        "You were born for days like this. Swing big. Say the brave thing in the meeting. Sign things.",
+        "The universe has put every celestial body in your corner. This is not a drill."
+      ]
+    }
+  },
+  love: {
+    icon: "💕", name: "Love & Social",
+    m: {
+      1: [
+        "The love stars are taking a personal day. Keep interactions brief, texts short, and feelings to yourself for now.",
+        "Today's social energy is like Wi-Fi in a basement. Connection keeps dropping. It's not you. It's the universe.",
+        "Best romantic move today: make yourself tea, watch something comforting, and lower your social expectations significantly.",
+        "Avoid deep conversations today. The cosmos haven't finished buffering your emotional software."
+      ],
+      2: [
+        "A mildly awkward social frequency surrounds you. Lean into it — awkward can be charming when fully committed.",
+        "Love is present but slightly blurry, like a photo taken too fast. Wait for the focus to return.",
+        "Your social energy needs a gentle warm-up. Start with something low-stakes before anything meaningful.",
+        "Connection attempts may require more effort than usual today. Persistence is your friend."
+      ],
+      3: [
+        "Warm, comfortable social energy. Nothing fireworks, nothing cold. A perfectly pleasant human day.",
+        "Your social life today is like background music — pleasant, stable, easy to overlook. That's genuinely fine.",
+        "Connections made today are solid if unspectacular. Quality over cosmic drama.",
+        "The social weather is mild and agreeable. Show up for the people who matter."
+      ],
+      4: [
+        "Your warmth is magnetic today. The people in your orbit feel it — let them feel it fully.",
+        "Good social energy flows freely. Reach out to someone you've been meaning to. Now is genuinely the time.",
+        "Romance has a favorable current today. Something small and genuine goes further than you'd expect.",
+        "You're unusually good company today. The stars have made a note of it."
+      ],
+      5: [
+        "Maximum heart energy. The stars have essentially written 'go connect with people' across the sky in your name.",
+        "You are irresistible to the right people today. The universe has scheduled at least one meaningful moment.",
+        "Love is loud today — romantic, friendly, or self-directed. Open every door when it knocks.",
+        "The cosmos have aligned your social frequency to its peak. Use this day to say the things that matter."
+      ]
+    }
+  },
+  health: {
+    icon: "🌿", name: "Health & Body",
+    m: {
+      1: [
+        "Your body is filing a formal complaint with the universe today. Listen to it. Rest is not weakness.",
+        "Today is a good day to cancel something, drink water, and pretend you are a plant on a windowsill.",
+        "The stars see low vitality in your physical lane. Honor it. Not every day is a workout day.",
+        "Sleep. Eat something warm. Move gently. The cosmos will still be here when you feel better."
+      ],
+      2: [
+        "Energy levels are slightly below par. Nothing a nap, some protein, and a gentle walk can't negotiate.",
+        "Your body is asking for gentleness today. Obliging it is an act of wisdom, not surrender.",
+        "Minor physical static today. The stars suggest: hydrate, breathe deeply, and pace yourself.",
+        "Below-average vitality. The universe recommends you conserve what you have for what matters."
+      ],
+      3: [
+        "Steady health energy. Your body is humming along at a sensible rhythm. Keep it going.",
+        "Nothing alarming, nothing euphoric. A good, functional body day — which is deeply underappreciated.",
+        "Maintenance mode is valid mode. The stars see a balanced, steady you today.",
+        "Your physical energy is where it should be. Routine and rhythm are your friends today."
+      ],
+      4: [
+        "Good vitality today. Your body wants to move. Let it.",
+        "Physical energy is above average. If you've been postponing that walk or workout — do it now.",
+        "Your health frequency is high today. Use it wisely. Your future self will remember this.",
+        "The body is willing. The stars approve. Whatever you've been putting off physically — today's your day."
+      ],
+      5: [
+        "Peak physical energy. Your body is a high-performance vehicle today. Drive it accordingly.",
+        "The cosmic health chart shows excellent alignment. Today is the day you do the things you keep promising yourself.",
+        "You feel it, don't you? That unusual lightness. The stars gave it to you. Use every bit of it.",
+        "Everything is firing correctly today. This is rare. Move, breathe, feel alive. The stars insist."
+      ]
+    }
+  },
+  finance: {
+    icon: "💰", name: "Finance & Luck",
+    m: {
+      1: [
+        "Today is not the day to gamble, invest aggressively, or buy anything non-essential. The money stars are napping.",
+        "Hold your wallet close and your credit card closer. The financial cosmos have a mischievous glint today.",
+        "Today's lucky number is 'no.' Apply it liberally to any financial decisions that arise.",
+        "The universe recommends reviewing your subscriptions. One is definitely something you forgot you signed up for."
+      ],
+      2: [
+        "Modest financial energy. Spend only what's necessary. Save the big moves for when the stars are paying attention.",
+        "Money flows slowly today — like water through a reluctant drain. Patience is the only currency worth spending.",
+        "Below-average luck in the material realm. Gratitude for what you have is the best investment today.",
+        "The financial forecast is cautious. Watch the small leaks — that's where it always goes."
+      ],
+      3: [
+        "Financial neutrality today. Money is where you left it, doing what you told it to do. Stable counts.",
+        "Luck is present but modest. Small wins, small losses — the universe balancing its books today.",
+        "Average financial day. Nothing dramatic. This is actually fine. Not every day needs to be a money day.",
+        "Steady financial weather. No surprises expected. Routine management is the move."
+      ],
+      4: [
+        "Your financial luck is quietly strong today. Small opportunities may look unimportant. Look closer.",
+        "Good energy in the money lane. Decisions made now have solid cosmic backing.",
+        "The stars smile on your financial awareness today. Act on the thing you've been quietly considering.",
+        "Above-average luck in the material realm. Keep your eyes open — something is worth noticing."
+      ],
+      5: [
+        "Lucky streak. The universe is pointing arrows at financial opportunities today. Stay awake to it.",
+        "Peak financial alignment. If you've been waiting for a sign — there it is, written in the stars.",
+        "Cosmic good fortune in your material lane. Not lottery-win magnitude — but meaningfully good. Don't waste it.",
+        "The money stars are singing your name today. Act with intention. The window is real."
+      ]
+    }
+  }
+};
+
+const ORACLES = [
+  "The universe has a soft spot for you today. It's subtle — in the way the coffee tastes just right, the light a little kinder, the timing strangely perfect.",
+  "Something small and good is coming your way today. You won't see it coming, which is entirely the point.",
+  "The stars are rooting for you with quiet, genuine enthusiasm. Not loudly — just steadily, in the background, like a very loyal friend.",
+  "Today holds a small miracle somewhere in it. It might be a conversation, a moment of clarity, or finally finding where you left your keys.",
+  "You are exactly where you are supposed to be today. Trust the strange, winding path. It's going somewhere worthwhile.",
+  "The cosmos have reviewed your recent decisions and, despite everything, have given you a passing grade. Well done for surviving yourself.",
+  "Today the universe has scheduled a 'mild inconvenience' for character building. It's not personal. The stars do this to everyone they like.",
+  "Mercury is currently behaving itself. Everyone is surprised, including Mercury. Make hay while the planets align.",
+  "The celestial committee has approved your continued existence today. Try not to make them regret it.",
+  "Your horoscope for today: things will happen, you will feel things about them, and somehow it will work out. Groundbreaking.",
+  "The stars have been observing your life for some time now. They find it compelling. Not always in a reassuring way — but compelling nonetheless.",
+  "Somewhere in the universe, a star died to create the atoms in your coffee. The least you can do is enjoy it slowly.",
+  "The moon looked at your chart and exhaled slowly. Then it said 'you've got this.' It sounded almost entirely convincing.",
+  "Today you will age exactly one day. The stars consider this non-negotiable. On the bright side, so does everyone else.",
+  "The universe doesn't actually care about your problems — it has 93 billion light-years of its own. And yet somehow, things tend to work out. Keep going.",
+  "In the grand cosmic scheme, today is statistically insignificant. In the small human scheme, it could be the day everything shifts. Worth showing up for.",
+  "Your ancestors survived unimaginable things so you could worry about notifications. Honor them by putting your phone down for at least five minutes.",
+  "The cosmos have been running this a long time. The thing you're worried about is usually not the actual thing.",
+  "Today's energy is best described as: possible. Which, in the grand scale of the universe, is actually quite generous.",
+  "The stars have reviewed the data and concluded: you are more capable than you currently believe. This is their official, unambiguous position.",
+  "Chaos theory suggests that small decisions compound into large outcomes. Today's small decision matters. Choose deliberately.",
+  "The moon is doing something beautiful tonight. Whether you see it or not, you are under the same sky as everyone you love.",
+  "The universe has been alive for 13.8 billion years and hasn't quit once. You can get through today.",
+  "A quiet power is building in your orbit today. The stars can't say exactly what it is — but they've noticed it, and so should you.",
+  "The celestial forecast suggests unexpected warmth from an expected direction. The stars enjoy a good plot twist.",
+  "Some days the stars align. Other days they're just doing their own thing and you happen to be in the same galaxy. Today is one of those days. Still valid.",
+  "Your energy today is like a partial eclipse — not everything is illuminated, but what is visible is genuinely interesting.",
+  "The universe filed a memo this morning: you are doing better than you think. The stars unanimously endorsed it.",
+  "Today's cosmic frequency carries a specific instruction: rest without guilt. The stars know you need it and they are fine with it.",
+  "Something in the planetary arrangement today whispers: be kinder to yourself than usual. The stars have noticed what you've been carrying."
+];
+
+const SUGGESTIONS = [
+  "Send one message you've been overthinking. The overthinking is now the problem, not the message.",
+  "Drink water before coffee. The stars said so. Ignore them and accept the consequences.",
+  "Look up from your screen at least once per hour. The world is still out there, mildly and consistently beautiful.",
+  "Tell one person something specific you appreciate about them. Vague compliments are cosmically weak.",
+  "Cancel one thing you agreed to out of guilt. The universe approves this message.",
+  "Eat something green today — not necessarily because it's healthy, just to remind yourself you're an organism that runs on real food.",
+  "Take a walk without your phone. It's terrifying for exactly ninety seconds, then deeply pleasant.",
+  "Write down three things, no matter how small. Your brain is a terrible filing system.",
+  "Say no to something today. Once. Firmly. Without the essay of explanation.",
+  "Sit outside for 10 minutes. The sky is doing something nice. It does this every day and most people miss it.",
+  "Text someone you haven't spoken to in a while. Keep it short. 'Thinking of you' does more than you think.",
+  "Clean one small thing — a surface, a drawer, your screenshots folder. The cosmos find clutter personally offensive.",
+  "Buy yourself something small and nice. Not as a reward — just because you exist, and that's sufficient reason.",
+  "Rest without guilt today. Horizontal ambition counts.",
+  "Learn one completely useless thing. The internet is full of them. This is actually its best feature.",
+  "Make your bed. Or don't. But notice how you feel about it at 9pm.",
+  "Laugh at something stupid — fully, out loud. The stars specifically requested this.",
+  "Eat lunch away from your desk. Revolutionary. Life-changing. Heavily endorsed by the cosmos.",
+  "Do one thing you've been 'about to do' for more than three days. The universe is patiently waiting.",
+  "Be kind to a stranger. Nothing elaborate — a door held, a smile, a brief acknowledgment of shared humanness.",
+  "Put your phone in another room for one hour. Face the silence. Bargain with it. You'll eventually become friends.",
+  "Stretch. You are not made of wood — even if it currently feels that way.",
+  "Drink the fancy thing you've been saving. The stars genuinely don't understand what you're saving it for.",
+  "Apologize if you need to. Not a 'sorry if you were offended' — an actual one.",
+  "Watch the sunset, or at least acknowledge it's happening somewhere and that this is quietly beautiful.",
+  "Make a list of everything you're avoiding. Then do the smallest item on it. This is how mountains move.",
+  "Give someone your full attention for five minutes. No phone, no half-listening. Just presence.",
+  "Compliment yourself once, out loud, not ironically, in a private space if needed. The stars are listening.",
+  "Slow down by 20% today. Everything done at 80% speed gets done better. The math is somehow correct.",
+  "Notice one beautiful thing before noon. Anything counts — a cloud, a color, the way light falls on something ordinary."
+];
+
+// ═══════════════════════════════════════════════════════════════
+//  ZODIAC & ASTRONOMY
+// ═══════════════════════════════════════════════════════════════
+function getWesternSign(m, d) {
+  const signs = [
+    ["Capricorn","♑"], ["Aquarius","♒"], ["Pisces","♓"],  ["Aries","♈"],
+    ["Taurus","♉"],   ["Gemini","♊"],   ["Cancer","♋"],  ["Leo","♌"],
+    ["Virgo","♍"],    ["Libra","♎"],    ["Scorpio","♏"], ["Sagittarius","♐"]
+  ];
+  const bounds = [
+    [12,22],[1,20],[2,19],[3,21],[4,20],[5,21],[6,21],[7,23],[8,23],[9,23],[10,23],[11,22]
+  ];
+  for (let i = 0; i < 12; i++) {
+    const [bm, bd] = bounds[i];
+    const [nm, nd] = bounds[(i + 1) % 12];
+    if (i === 11) { if ((m === 11 && d >= 22) || (m === 12 && d <= 21)) return signs[i]; }
+    else          { if ((m === bm && d >= bd) || (m === nm && d <= nd - 1)) return signs[i]; }
+  }
+  return signs[0]; // fallback Capricorn
+}
+
+function getChineseSign(year) {
+  const animals = ["Rat","Ox","Tiger","Rabbit","Dragon","Snake","Horse","Goat","Monkey","Rooster","Dog","Pig"];
+  const emojis  = ["🐀","🐂","🐯","🐰","🐉","🐍","🐴","🐐","🐒","🐓","🐕","🐷"];
+  const idx = ((year - 1900) % 12 + 12) % 12;
+  return [animals[idx], emojis[idx]];
+}
+
+function getMoonPhase(date) {
+  const d = new Date(date);
+  const y = d.getFullYear(), mo = d.getMonth() + 1, day = d.getDate();
+  const jd = 367*y - Math.floor(7*(y + Math.floor((mo+9)/12))/4)
+           + Math.floor(275*mo/9) + day + 1721013.5;
+  const knownNew = 2451549.5, cycle = 29.53058867;
+  const phase = (((jd - knownNew) % cycle) + cycle) % cycle;
+  const r = phase / cycle;
+  const phases = [
+    [.0625,"🌑","New Moon"],[.1875,"🌒","Waxing Crescent"],
+    [.3125,"🌓","First Quarter"],[.4375,"🌔","Waxing Gibbous"],
+    [.5625,"🌕","Full Moon"],[.6875,"🌖","Waning Gibbous"],
+    [.8125,"🌗","Last Quarter"],[.9375,"🌘","Waning Crescent"]
+  ];
+  for (const [limit, emoji, name] of phases) if (r < limit) return [emoji, name];
+  return ["🌑","New Moon"];
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  DETERMINISTIC RNG
+// ═══════════════════════════════════════════════════════════════
+function mkRng(seed) {
+  let s = seed | 0;
+  return () => {
+    s ^= s << 13; s ^= s >> 17; s ^= s << 5;
+    return (s >>> 0) / 0xffffffff;
+  };
+}
+
+function dailySeed(bday, today) {
+  const b = new Date(bday), t = new Date(today);
+  const bv = b.getFullYear()*10000 + (b.getMonth()+1)*100 + b.getDate();
+  const tv = t.getFullYear()*10000 + (t.getMonth()+1)*100 + t.getDate();
+  return Math.abs((bv * 2654435769) ^ (tv * 2246822519)) % 0x7fffffff;
+}
+
+function pickRating(rng) {
+  const r = rng();
+  if (r < .10) return 1;
+  if (r < .26) return 2;
+  if (r < .54) return 3;
+  if (r < .78) return 4;
+  return 5;
+}
+
+function pick(arr, rng) { return arr[Math.floor(rng() * arr.length)]; }
+
+// ═══════════════════════════════════════════════════════════════
+//  RENDER HELPERS
+// ═══════════════════════════════════════════════════════════════
+const RLABELS = ["","Rough Waters","Murky Skies","Still Waters","Fair Winds","Star Aligned"];
+
+function renderDots(rating) {
+  let html = `<div class="dots r${rating}">`;
+  for (let i = 1; i <= 5; i++)
+    html += `<div class="dot${i <= rating ? ' on' : ''}"></div>`;
+  return html + `</div><div class="rating-label">${RLABELS[rating]}</div>`;
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  APP
+// ═══════════════════════════════════════════════════════════════
+function init() {
+  const saved = localStorage.getItem('cosmic_bday');
+  if (saved) renderReading(saved);
+  else       show('onboarding');
+}
+
+function show(id) {
+  ['onboarding','reading'].forEach(s => document.getElementById(s).classList.add('hidden'));
+  document.getElementById(id).classList.remove('hidden');
+}
+
+function startReading() {
+  const v = document.getElementById('bday-input').value;
+  if (!v) { shake('bday-input'); return; }
+  localStorage.setItem('cosmic_bday', v);
+  renderReading(v);
+}
+
+function resetBday() {
+  if (!confirm('Reset your birthday? The stars will need to meet you again.')) return;
+  localStorage.removeItem('cosmic_bday');
+  document.getElementById('bday-input').value = '';
+  show('onboarding');
+}
+
+function shake(id) {
+  const el = document.getElementById(id);
+  el.style.borderColor = 'rgba(255,100,100,.6)';
+  setTimeout(() => el.style.borderColor = '', 900);
+}
+
+function renderReading(bday) {
+  show('reading');
+
+  const birth = new Date(bday);
+  const today = new Date();
+  const bM = birth.getMonth() + 1, bD = birth.getDate(), bY = birth.getFullYear();
+
+  const [wsName, wsEmoji]      = getWesternSign(bM, bD);
+  const [czName, czEmoji]      = getChineseSign(bY);
+  const [moonEmoji, moonName]  = getMoonPhase(today);
+
+  const todayStr = today.toISOString().split('T')[0];
+  const rng = mkRng(dailySeed(bday, todayStr));
+
+  // Ratings
+  const ratings = { work: pickRating(rng), love: pickRating(rng), health: pickRating(rng), finance: pickRating(rng) };
+
+  // Messages
+  const msgs = {};
+  for (const k of ['work','love','health','finance'])
+    msgs[k] = pick(C[k].m[ratings[k]], rng);
+
+  const oracle  = pick(ORACLES, rng);
+  const suggest = pick(SUGGESTIONS, rng);
+
+  // Header
+  const days   = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const titles = ['Your Daily Reading','The Stars Speak','Today\'s Oracle','Cosmic Forecast','The Universe Weighs In'];
+
+  document.getElementById('r-date').textContent =
+    `${days[today.getDay()]}, ${months[today.getMonth()]} ${today.getDate()}, ${today.getFullYear()}`;
+  document.getElementById('r-title').textContent = pick(titles, rng);
+  document.getElementById('r-signs').innerHTML =
+    `<div class="badge">${wsEmoji} ${wsName}</div>
+     <div class="badge">${czEmoji} ${czName}</div>
+     <div class="badge">${moonEmoji} ${moonName}</div>`;
+
+  // Category cards
+  const catKeys = ['work','love','health','finance'];
+  const delays  = ['d1','d2','d3','d4'];
+  document.getElementById('cat-grid').innerHTML = catKeys.map((k, i) => `
+    <div class="glass-card cat-card fade-up ${delays[i]}">
+      <div class="cat-head">
+        <span class="cat-icon">${C[k].icon}</span>
+        <span class="cat-name">${C[k].name}</span>
+      </div>
+      ${renderDots(ratings[k])}
+      <div class="cat-msg">${msgs[k]}</div>
+    </div>
+  `).join('');
+
+  document.getElementById('oracle-text').textContent  = oracle;
+  document.getElementById('suggest-text').textContent = suggest;
+  document.getElementById('r-footer').textContent = `${wsEmoji} ${wsName} · ${czEmoji} Year of the ${czName}`;
+}
+
+init();
+</script>
+</body>
+</html>
