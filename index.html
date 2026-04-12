@@ -396,14 +396,67 @@
       color:var(--t2);font-size:12px;letter-spacing:.2px;
       box-shadow:var(--glass-shadow-soft);
     }
+    .detail-custom{display:none}
     .detail-copy{display:flex;flex-direction:column;gap:12px}
     .detail-copy p{font-size:16px;line-height:1.72;color:var(--t1)}
     .detail-copy p strong{color:var(--t1)}
+
+    .almanac-shell{display:flex;flex-direction:column;gap:14px}
+    .almanac-top{display:flex;flex-wrap:wrap;gap:8px}
+    .almanac-id{
+      display:flex;align-items:center;gap:8px;
+      padding:10px 14px;border-radius:18px;
+      background:var(--glass-chip);border:1px solid var(--glass-border-soft);
+      color:var(--t2);font-size:13px;
+      box-shadow:var(--glass-shadow-soft);
+    }
+    .almanac-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+    .almanac-tab{
+      border:none;cursor:pointer;text-align:left;font-family:inherit;
+      padding:14px 13px;border-radius:20px;
+      background:var(--glass-panel-soft);border:1px solid var(--glass-border-soft);
+      color:var(--t2);box-shadow:var(--glass-shadow-soft);
+      transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease,background .22s ease,color .22s ease;
+    }
+    .almanac-tab:hover,.almanac-tab:focus-visible{
+      transform:translateY(-1px);
+      border-color:rgba(196,165,90,.26);
+      color:var(--t1);
+      outline:none;
+    }
+    .almanac-tab.active{
+      background:var(--glass-panel);
+      border-color:rgba(196,165,90,.30);
+      color:var(--t1);
+      box-shadow:var(--glass-shadow-hover);
+    }
+    .almanac-tab-label{font-size:10.5px;font-weight:700;letter-spacing:1.3px;text-transform:uppercase;color:var(--gold);opacity:.8;margin-bottom:6px}
+    .almanac-tab-value{font-size:14px;line-height:1.35}
+    .almanac-active{
+      padding:16px 16px 14px;border-radius:22px;
+      background:var(--glass-panel-soft);border:1px solid var(--glass-border-soft);
+      box-shadow:var(--glass-shadow-soft);
+    }
+    .almanac-active-kicker{font-size:10.5px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);opacity:.78;margin-bottom:8px}
+    .almanac-active-title{font-size:17px;font-weight:600;color:var(--t1);margin-bottom:6px}
+    .almanac-active-note{font-size:14px;line-height:1.68;color:var(--t2)}
+    .almanac-yi-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .almanac-yi-card{
+      padding:16px 16px 14px;border-radius:22px;
+      background:var(--glass-panel-soft);border:1px solid var(--glass-border-soft);
+      box-shadow:var(--glass-shadow-soft);
+    }
+    .almanac-yi-label{font-size:11px;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;margin-bottom:8px}
+    .almanac-yi-card.do .almanac-yi-label{color:var(--gold)}
+    .almanac-yi-card.dont .almanac-yi-label{color:var(--t3)}
+    .almanac-yi-text{font-size:15px;line-height:1.7;color:var(--t1)}
 
     @media (max-width:560px){
       .detail-sheet{padding:24px 18px 20px;border-radius:26px}
       .detail-title{font-size:25px}
       .detail-copy p{font-size:15.5px}
+      .almanac-grid{grid-template-columns:1fr}
+      .almanac-yi-grid{grid-template-columns:1fr}
     }
 
     /* ── ANIMATION ────────────────────────────── */
@@ -473,6 +526,7 @@
     <div class="detail-title" id="detail-title"></div>
     <div class="detail-sub" id="detail-sub"></div>
     <div class="detail-facts" id="detail-facts"></div>
+    <div class="detail-custom" id="detail-custom"></div>
     <div class="detail-copy" id="detail-copy"></div>
   </div>
 </div>
@@ -2075,6 +2129,74 @@ const DETAILS = {
   }
 };
 
+const ALMANAC_ZH = {
+  phase: [
+    {label:"新月", short:"适合轻启动", note:"新月是月相循环的起点，更适合定方向、留白和轻启动，不适合一下子把摊子铺得太满。", yi:"轻启动与定方向", ji:"一次铺开太多新线"},
+    {label:"眉月", short:"适合试水推进", note:"眉月刚刚离开起点，比较适合试水、推进第一步，把想法从纸面推到现实。", yi:"试水推进与发出信号", ji:"拖着不动只做空想"},
+    {label:"上弦月", short:"适合拍板执行", note:"上弦月通常带一点张力，适合做决定、定优先级、把模糊的事往前推。", yi:"拍板与执行", ji:"反复摇摆不做决定"},
+    {label:"盈凸月", short:"适合打磨修正", note:"盈凸月靠近高点，更适合补细节、修边角、做最后一轮调整。", yi:"打磨、修正与补细节", ji:"粗糙上阵或急着收尾"},
+    {label:"满月", short:"适合看结果", note:"满月可见度最高，更适合看结果、看反馈、把已经成形的事摆到台面上。", yi:"看结果与公开呈现", ji:"逃避反馈或情绪化加码"},
+    {label:"亏凸月", short:"适合复盘分享", note:"亏凸月开始回收，更适合复盘、分享经验、判断什么值得继续。", yi:"复盘与经验整理", ji:"继续无差别加码"},
+    {label:"下弦月", short:"适合做减法", note:"下弦月是整理与删减感比较强的阶段，适合砍掉枝杈、收束范围、修补漏洞。", yi:"减法、修补与收束", ji:"贪多、分心或再开新坑"},
+    {label:"残月", short:"适合收尾留白", note:"残月接近一个循环的尾声，更适合收尾、清理、留一点安静空间，让事情自然落地。", yi:"收尾、清理与留白", ji:"硬冲、铺张或强行拉满"}
+  ],
+  sign: [
+    {label:"白羊", short:"利直接推进", note:"月入白羊时，事情适合快一点、直一点，但不适合带着火气乱顶。", yi:"直推进度与先动起来", ji:"带情绪硬碰硬"},
+    {label:"金牛", short:"利稳住节奏", note:"月入金牛更适合求稳、落地、把节奏放回身体和现实层面。", yi:"稳住节奏与顾好现实", ji:"冲动消费或乱改节奏"},
+    {label:"双子", short:"利沟通流动", note:"月入双子更适合交流、联络、收信息，但不适合把注意力切得太碎。", yi:"沟通联络与收集资讯", ji:"嘴快心散或信息过载"},
+    {label:"巨蟹", short:"利照顾内里", note:"月入巨蟹更适合照顾家务、情绪和安全感，不适合过度逞强。", yi:"照顾内里与维护关系", ji:"嘴硬逞强或情绪积压"},
+    {label:"狮子", short:"利表达亮相", note:"月入狮子更适合表达、亮相和把重点摆到台面上，但不适合过度表演。", yi:"表达立场与体面亮相", ji:"逞面子或抢戏太过"},
+    {label:"处女", short:"利整理细节", note:"月入处女更适合整理、校对、查漏补缺，不适合吹毛求疵到卡住。", yi:"整理细节与查漏补缺", ji:"过度挑剔或卡在小处"},
+    {label:"天秤", short:"利协商平衡", note:"月入天秤更适合协商、配合、调整气氛，不适合一味讨好。", yi:"协商、配合与审美整理", ji:"失去边界地迎合"},
+    {label:"天蝎", short:"利看见核心", note:"月入天蝎更适合看核心、看动机、处理深层问题，不适合情绪拉扯。", yi:"看核心与做深处理", ji:"猜忌、较劲或翻旧账"},
+    {label:"射手", short:"利打开视野", note:"月入射手更适合抬高视角、做远一点的安排，不适合说得太满。", yi:"抬高视角与安排远一点", ji:"空喊口号或承诺过头"},
+    {label:"摩羯", short:"利收束责任", note:"月入摩羯更适合排责任、定时程、把事做成，不适合把压力全往身上扛。", yi:"收束责任与定时程", ji:"闷头硬扛或只顾结果"},
+    {label:"水瓶", short:"利抽离看结构", note:"月入水瓶更适合抽离一点看结构、调系统、换思路，不适合过度冷掉。", yi:"抽离审视与结构调整", ji:"疏离过头或只讲道理"},
+    {label:"双鱼", short:"利放软感受", note:"月入双鱼更适合创作、感受、放松一点，但不适合边界太散。", yi:"创作感受与温柔缓冲", ji:"边界松掉或逃避现实"}
+  ],
+  day: [
+    {label:"太阳日", short:"利发光定调", note:"太阳日对应星期日，比较适合把要紧的事摆到台面上，做主调和定调。", yi:"定调、亮相与安排主轴", ji:"状态发散却没有主心骨"},
+    {label:"月亮日", short:"利照顾与调整", note:"月亮日对应星期一，更适合照顾情绪、水位和身体节奏，做柔性的调整。", yi:"照顾、调整与回到节律", ji:"硬压情绪或超额消耗"},
+    {label:"火星日", short:"利攻坚处理", note:"火星日对应星期二，更适合处理硬任务、卡点和需要勇气的事。", yi:"攻坚、清障与直接处理", ji:"无意义起冲突"},
+    {label:"水星日", short:"利沟通整理", note:"水星日对应星期三，更适合开会、写字、联络、整理信息与日程。", yi:"沟通、写作与清单整理", ji:"含糊表达或消息积压"},
+    {label:"木星日", short:"利放大格局", note:"木星日对应星期四，更适合把视野放大一点，看资源、机会和长期布局。", yi:"看机会、谈资源与布局长期", ji:"小气保守或看不见大局"},
+    {label:"金星日", short:"利关系审美", note:"金星日对应星期五，更适合关系修复、审美整理、以及让生活回一点甜度。", yi:"关系修复与审美优化", ji:"冷处理或把气氛弄硬"},
+    {label:"土星日", short:"利收束减法", note:"土星日对应星期六，更适合做减法、补漏洞、处理拖延已久的责任。", yi:"收束、修补与做减法", ji:"逃避责任或继续拖延"}
+  ],
+  yiTemplates: [
+    ({p,s,d})=>`${p.yi}，配合${s.yi}，也适合${d.yi}。`,
+    ({p,s,d})=>`今天偏适合${p.yi}；如果要安排事情，顺着${s.yi}和${d.yi}去做会更顺。`,
+    ({p,s,d})=>`宜${p.yi}，再把重点放到${s.yi}与${d.yi}上，整体节奏会更稳。`
+  ],
+  jiTemplates: [
+    ({p,s,d})=>`${p.ji}，也不宜${s.ji}，同时尽量避免${d.ji}。`,
+    ({p,s,d})=>`今天不太适合${p.ji}；若再叠加${s.ji}或${d.ji}，就容易把节奏做乱。`,
+    ({p,s,d})=>`不宜${p.ji}，也别往${s.ji}和${d.ji}那边走，容易费力不讨好。`
+  ]
+};
+
+function almanacKey(phaseIdx,moonSignIdx,dayIdx){
+  return`${phaseIdx}-${moonSignIdx}-${dayIdx}`;
+}
+
+function buildAlmanacCombosZh(){
+  const map={};
+  for(let p=0;p<ALMANAC_ZH.phase.length;p++){
+    for(let s=0;s<ALMANAC_ZH.sign.length;s++){
+      for(let d=0;d<ALMANAC_ZH.day.length;d++){
+        const hash=p*84+s*7+d;
+        map[almanacKey(p,s,d)]={
+          yi:ALMANAC_ZH.yiTemplates[hash%ALMANAC_ZH.yiTemplates.length]({p:ALMANAC_ZH.phase[p],s:ALMANAC_ZH.sign[s],d:ALMANAC_ZH.day[d]}),
+          ji:ALMANAC_ZH.jiTemplates[hash%ALMANAC_ZH.jiTemplates.length]({p:ALMANAC_ZH.phase[p],s:ALMANAC_ZH.sign[s],d:ALMANAC_ZH.day[d]})
+        };
+      }
+    }
+  }
+  return map;
+}
+
+const ALMANAC_COMBOS_ZH = buildAlmanacCombosZh();
+
 // ═══════════════════════════════════════════════════════════════
 //  SHARED EMOJI ARRAYS
 // ═══════════════════════════════════════════════════════════════
@@ -2349,6 +2471,14 @@ function applyDetail(payload){
   $('detail-facts').innerHTML=facts.map(f=>`<span class="detail-pill">${escapeHtml(f)}</span>`).join('');
   $('detail-facts').style.display=facts.length?'flex':'none';
 
+  const custom=$('detail-custom');
+  custom.innerHTML='';
+  custom.style.display='none';
+  if(payload.custom && payload.custom.type==='almanac'){
+    renderAlmanacCustom(payload.custom);
+    custom.style.display='block';
+  }
+
   const copy=$('detail-copy');
   copy.innerHTML='';
   (payload.paragraphs||[]).filter(Boolean).forEach(text=>{
@@ -2356,6 +2486,7 @@ function applyDetail(payload){
     p.textContent=text;
     copy.appendChild(p);
   });
+  copy.style.display=copy.childElementCount?'flex':'none';
 }
 
 function openDetail(payload){
@@ -2391,6 +2522,90 @@ function displayMoonSignName(idx){
   return lang==='zh'
     ?`${LANG.zh.zodiacNames[idx]} · ${LANG.en.zodiacNames[idx]}`
     :LANG.en.zodiacNames[idx];
+}
+
+function getAlmanacComboZh(){
+  return ALMANAC_COMBOS_ZH[almanacKey(readingState.phaseIdx,readingState.moonSignIdx,readingState.dayIdx)];
+}
+
+function buildAlmanacDetail(activeTab='phase'){
+  const phase=ALMANAC_ZH.phase[readingState.phaseIdx];
+  const sign=ALMANAC_ZH.sign[readingState.moonSignIdx];
+  const day=ALMANAC_ZH.day[readingState.dayIdx];
+  return{
+    kicker:'今日宜忌',
+    title:'今日宜忌视窗',
+    subtitle:`${phase.label} · 月入${LANG.zh.zodiacNames[readingState.moonSignIdx]} · ${day.label}`,
+    facts:[],
+    paragraphs:[],
+    custom:{
+      type:'almanac',
+      activeTab
+    }
+  };
+}
+
+function renderAlmanacCustom(config){
+  const custom=$('detail-custom');
+  const combo=getAlmanacComboZh();
+  const activeTab=config.activeTab||'phase';
+  const items={
+    phase:{
+      label:'月相',
+      value:`${MOON_EMOJI[readingState.phaseIdx]} ${ALMANAC_ZH.phase[readingState.phaseIdx].label}`,
+      title:`${MOON_EMOJI[readingState.phaseIdx]} ${ALMANAC_ZH.phase[readingState.phaseIdx].label}`,
+      note:ALMANAC_ZH.phase[readingState.phaseIdx].note
+    },
+    moonSign:{
+      label:'月入星座',
+      value:`🌙 ${displayMoonSignName(readingState.moonSignIdx)}`,
+      title:`🌙 月入${displayMoonSignName(readingState.moonSignIdx)}`,
+      note:ALMANAC_ZH.sign[readingState.moonSignIdx].note
+    },
+    day:{
+      label:'今日之日',
+      value:`${PLANET_EMOJI[readingState.dayIdx]} ${ALMANAC_ZH.day[readingState.dayIdx].label}`,
+      title:`${PLANET_EMOJI[readingState.dayIdx]} ${ALMANAC_ZH.day[readingState.dayIdx].label}`,
+      note:ALMANAC_ZH.day[readingState.dayIdx].note
+    }
+  };
+
+  custom.innerHTML=`
+    <div class="almanac-shell">
+      <div class="almanac-top">
+        <div class="almanac-id">${WEST_EMOJI[readingState.westIdx]} ${displayWesternName(readingState.westIdx)}</div>
+        <div class="almanac-id">${CHI_EMOJI[readingState.chineseIdx]} ${displayChineseZodiacName(readingState.chineseIdx)}</div>
+      </div>
+      <div class="almanac-grid">
+        ${Object.entries(items).map(([key,item])=>`
+          <button type="button" class="almanac-tab${key===activeTab?' active':''}" data-almanac-tab="${key}">
+            <div class="almanac-tab-label">${item.label}</div>
+            <div class="almanac-tab-value">${item.value}</div>
+          </button>
+        `).join('')}
+      </div>
+      <div class="almanac-active">
+        <div class="almanac-active-kicker">${items[activeTab].label}</div>
+        <div class="almanac-active-title">${items[activeTab].title}</div>
+        <div class="almanac-active-note">${items[activeTab].note}</div>
+      </div>
+      <div class="almanac-yi-grid">
+        <div class="almanac-yi-card do">
+          <div class="almanac-yi-label">今日宜</div>
+          <div class="almanac-yi-text">${escapeHtml(combo.yi)}</div>
+        </div>
+        <div class="almanac-yi-card dont">
+          <div class="almanac-yi-label">今日不宜</div>
+          <div class="almanac-yi-text">${escapeHtml(combo.ji)}</div>
+        </div>
+      </div>
+    </div>
+  `;
+  custom.querySelectorAll('[data-almanac-tab]').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      applyDetail(buildAlmanacDetail(btn.dataset.almanacTab));
+    });
+  });
 }
 
 function buildWesternDetail(idx){
@@ -2551,10 +2766,10 @@ function getDetailPayload(type,key){
   switch(type){
     case 'western': return buildWesternDetail(Number(key));
     case 'chinese': return buildChineseDetail(Number(key));
-    case 'moon-phase': return buildMoonPhaseDetail(Number(key));
-    case 'moon-sign': return buildMoonSignDetail(Number(key));
-    case 'planet-day': return buildPlanetDetail(Number(key));
-    case 'astro': return buildAstroDetail();
+    case 'moon-phase': return lang==='zh'?buildAlmanacDetail('phase'):buildMoonPhaseDetail(Number(key));
+    case 'moon-sign': return lang==='zh'?buildAlmanacDetail('moonSign'):buildMoonSignDetail(Number(key));
+    case 'planet-day': return lang==='zh'?buildAlmanacDetail('day'):buildPlanetDetail(Number(key));
+    case 'astro': return lang==='zh'?buildAlmanacDetail('phase'):buildAstroDetail();
     case 'category': return buildCategoryDetail(key);
     case 'oracle': return buildOracleDetail();
     case 'suggestion': return buildSuggestionDetail();
@@ -2629,7 +2844,11 @@ function renderReading(bday){
     msgs,
     oracle,
     suggest,
+    phaseIdx:mi,
+    dayIdx:today.getDay(),
     aspect:calc.asp,
+    westIdx:wi,
+    chineseIdx:ci,
     moonSignIdx:calc.moonSignIdx,
     moonInLabel,
     planetDayLabel
