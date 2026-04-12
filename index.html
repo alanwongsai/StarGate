@@ -288,12 +288,22 @@
       outline:none;
     }
 
-    .r-astro{
-      font-size:11px;color:var(--gold);opacity:.50;letter-spacing:.8px;text-align:center;margin-top:8px;min-height:14px;
-      transition:opacity .2s ease,color .2s ease,transform .2s ease;
+    .almanac-summary{
+      width:100%;max-width:430px;padding:18px 18px 16px;
+      display:flex;flex-direction:column;gap:13px;
     }
-    .r-astro.detail-trigger{cursor:pointer}
-    .r-astro.detail-trigger:hover,.r-astro.detail-trigger:focus-visible{opacity:.82;transform:translateY(-1px);outline:none}
+    .almanac-summary-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+    .almanac-summary-kicker{font-size:11px;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;color:var(--gold);opacity:.82}
+    .almanac-summary-title{font-family:var(--font-title);font-size:20px;font-weight:700;color:var(--t1);line-height:1.18;margin-top:3px}
+    .almanac-summary-more{font-size:11px;color:var(--t3);padding-top:3px;white-space:nowrap}
+    .almanac-summary-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+    .almanac-summary-item{
+      padding:12px 11px;border-radius:18px;
+      background:var(--glass-chip);border:1px solid var(--glass-border-soft);
+      box-shadow:var(--glass-shadow-soft);
+    }
+    .almanac-summary-label{font-size:10px;font-weight:700;letter-spacing:1.1px;text-transform:uppercase;color:var(--gold);opacity:.76;margin-bottom:5px}
+    .almanac-summary-value{font-size:13px;line-height:1.36;color:var(--t1)}
 
     /* ── CATEGORY GRID ────────────────────────── */
     .cat-grid{width:100%;max-width:430px;display:grid;grid-template-columns:1fr 1fr;gap:11px}
@@ -455,6 +465,7 @@
       .detail-sheet{padding:24px 18px 20px;border-radius:26px}
       .detail-title{font-size:25px}
       .detail-copy p{font-size:15.5px}
+      .almanac-summary-grid{grid-template-columns:1fr}
       .almanac-grid{grid-template-columns:1fr}
       .almanac-yi-grid{grid-template-columns:1fr}
     }
@@ -499,8 +510,8 @@
     <div class="r-date"  id="r-date"></div>
     <div class="r-title" id="r-title"></div>
     <div class="signs-row" id="r-signs"></div>
-    <div class="r-astro detail-trigger" id="r-astro" tabindex="0" role="button" data-detail="astro"></div>
   </div>
+  <div class="glass almanac-summary interactive-card fu d1" id="almanac-summary" tabindex="0" role="button" data-detail="almanac"></div>
   <div class="cat-grid" id="cat-grid"></div>
   <div class="glass oracle-card interactive-card fu d5" id="oracle-card" tabindex="0" role="button" data-detail="oracle">
     <div class="oracle-lbl" id="oracle-lbl"></div>
@@ -549,7 +560,7 @@ const LANG = {
     changeBtn:   "Change birthday",
     detailClose: "Close details",
     resetMsg:    "Reset your birthday? The stars will need to meet you again.",
-    langToggle:  "中文",
+    langToggle:  "Chinese",
     readingTitles:["Your Daily Reading","The Stars Speak","Today's Oracle","Cosmic Forecast","The Universe Weighs In"],
     yearOf:      a => `Year of the ${a}`,
     dateStr:     (wday,m,d,y) => `${wday}, ${m} ${d}, ${y}`,
@@ -1020,7 +1031,7 @@ const LANG = {
     changeBtn:   "修改生日",
     detailClose: "关闭详情",
     resetMsg:    "重置生日？星辰将需要重新认识你。",
-    langToggle:  "EN",
+    langToggle:  "英文",
     readingTitles:["今日星盘解读","星辰有话说","神谕降临","宇宙预言","今日运势"],
     yearOf:      a => `${a}年`,
     dateStr:     (wday,_m,d,y) => `${y}年${_m}月${d}日 ${wday}`,
@@ -1070,7 +1081,7 @@ const LANG = {
            "可靠、务实的一天。不是高光时刻，但默默不可或缺。",
            "宇宙的职场账本今天保持平衡。没有大得，也没有大失。",
            "中性职场能量。系统正常运行。带着全副注意力做好普通任务。",
-           "星辰看见你在工作。它们觉得不够glamorous，但对此深感尊重。",
+           "星辰看见你在工作。它们觉得不够光鲜亮丽，但对此深感尊重。",
            "普通的职场日。道路平坦，养护良好。稳步前行即可。"],
         4:["宇宙浪潮今天推动你的事业前行。把一直犹豫的事情推动起来。",
            "今天你有一种罕见的清晰感。好好用——宇宙不总是接你电话的。",
@@ -1102,7 +1113,7 @@ const LANG = {
       name:"感情人际",
       m:{
         1:["今天的爱情星在休假。互动简短，消息简洁，感情暂时放在心里。",
-           "今天的社交能量像地下室的Wi-Fi，频繁断线。不是你的问题，是宇宙的信号。",
+           "今天的社交能量像地下室的无线网络，频繁断线。不是你的问题，是宇宙的信号。",
            "今天最好的感情举措：泡杯茶，看点轻松的，降低社交期待。",
            "避免今天的深层对话——宇宙还没缓冲完你的情感软件。",
            "社交天空今天阴云密布。不是暴风雨，只是灰色。人比平时难读懂，不要强推。",
@@ -1237,7 +1248,7 @@ const LANG = {
            "宇宙建议检查一下你的订阅。其中一定有一个你已经忘了。",
            "财运行星今天情绪复杂。今天最好的投资就是按兵不动。",
            "财运极差。不要测试它。你今天所有的财务直觉可能都是错的。",
-           "今天不适合花钱、投资、做任何形式的财务冒险。关掉那些App，等着。",
+           "今天不适合花钱、投资、做任何形式的财务冒险。关掉那些应用，等着。",
            "财运星今天已经黯淡。今天买的任何东西到了周五都会感觉像个错误。",
            "财运能量处于低谷。无论那个购买决定是什么，可以等。无论那个赌局是什么，放弃。",
            "宇宙今天温柔但坚定地按住了你的钱包。尊重这个信号。",
@@ -1452,7 +1463,7 @@ const LANG = {
       "注意一下你现在的坐姿并调整它。你未来的脊椎会正式发一封感谢信。",
       "在你常看的地方放一朵鲜花或一株植物。有生命的东西会改变空间的气息。",
       "今天做一个基于你真正想要什么的决定，而不是什么看起来最实际。",
-      "关掉所有你没在用的App。把手机当工具用，不是当习惯用。",
+      "关掉所有你没在用的应用。把手机当工具用，不是当习惯用。",
       "写下一件你想在未来一个月尝试的事，并为它安排第一步。",
       "在正午之前为未来的自己做一件事——备好食物、整理好衣物、清理好桌面。",
       "今天请求某人的帮助。你会发现这件事比你预想的要舒服得多。",
@@ -1461,7 +1472,7 @@ const LANG = {
       "找到你最在逃避的那件事，只做它的前两分钟。",
       "今天给某件美丽的事拍一张照片——不是为了别人，只是为了好好看清它。",
       "今天有一顿饭不看任何屏幕。只有食物，和当下房间里发生的一切。",
-      "彻底清理一个文件夹或一个App。彻底才是重点。",
+      "彻底清理一个文件夹或一个应用。彻底才是重点。",
       "写下三件你真实喜欢自己的事。是准确的，不是期待成为的那种。",
       "联系一个曾经对你有过影响的人，告诉他们具体是怎么影响你的。",
       "给自己一个真正的午休。坐下来，吃点真实的食物，20分钟内什么别的都不做。",
@@ -2046,7 +2057,7 @@ const DETAILS = {
       {
         subtitle: "下一次新月前最后一弯细月",
         facts: ["时段：周期最后几天", "主题：休息、放手、结束"],
-        summary: "残月是整个月相周期的最后一口气。如果你说的是 waning crescent，大致就是这轮细细的收尾月亮。",
+        summary: "残月是整个月相周期的最后一口气，大致就是这轮细细的收尾月亮。",
         extra: "它常和安静、睡眠、直觉、原谅以及有意识地结束这个周期有关。"
       }
     ],
@@ -2163,39 +2174,99 @@ const ALMANAC_ZH = {
     {label:"金星日", short:"利关系审美", note:"金星日对应星期五，更适合关系修复、审美整理、以及让生活回一点甜度。", yi:"关系修复与审美优化", ji:"冷处理或把气氛弄硬"},
     {label:"土星日", short:"利收束减法", note:"土星日对应星期六，更适合做减法、补漏洞、处理拖延已久的责任。", yi:"收束、修补与做减法", ji:"逃避责任或继续拖延"}
   ],
-  yiTemplates: [
-    ({p,s,d})=>`${p.yi}，配合${s.yi}，也适合${d.yi}。`,
-    ({p,s,d})=>`今天偏适合${p.yi}；如果要安排事情，顺着${s.yi}和${d.yi}去做会更顺。`,
-    ({p,s,d})=>`宜${p.yi}，再把重点放到${s.yi}与${d.yi}上，整体节奏会更稳。`
+  west: [
+    {yi:"按长期目标定边界", ji:"过度自我要求"},
+    {yi:"保留一点独立判断", ji:"为了特别而特别"},
+    {yi:"放软感受但守住边界", ji:"被情绪带着漂"},
+    {yi:"先动起来再微调", ji:"一急就硬冲"},
+    {yi:"稳住资源和身体节奏", ji:"固执地不肯转弯"},
+    {yi:"把信息说清楚", ji:"同时打开太多话题"},
+    {yi:"照顾内在安全感", ji:"把小事闷成心事"},
+    {yi:"体面表达自己的重点", ji:"为了面子加戏"},
+    {yi:"把细节整理到位", ji:"挑剔到失去弹性"},
+    {yi:"用协商换取平衡", ji:"过度迎合他人节奏"},
+    {yi:"看清核心再行动", ji:"把猜测当成事实"},
+    {yi:"把视野放远一点", ji:"承诺超过执行力"}
   ],
-  jiTemplates: [
-    ({p,s,d})=>`${p.ji}，也不宜${s.ji}，同时尽量避免${d.ji}。`,
-    ({p,s,d})=>`今天不太适合${p.ji}；若再叠加${s.ji}或${d.ji}，就容易把节奏做乱。`,
-    ({p,s,d})=>`不宜${p.ji}，也别往${s.ji}和${d.ji}那边走，容易费力不讨好。`
+  chinese: [
+    {yi:"留意机会入口", ji:"在小聪明里绕太久"},
+    {yi:"用稳定动作累积结果", ji:"慢到错过窗口"},
+    {yi:"拿出一点胆量", ji:"凭冲动压过判断"},
+    {yi:"温和处理人际气氛", ji:"回避该说清的话"},
+    {yi:"把气场用在正事上", ji:"用力过猛"},
+    {yi:"先观察再出手", ji:"过度试探"},
+    {yi:"保持行动中的自由度", ji:"急着摆脱所有约束"},
+    {yi:"让环境变得舒服一点", ji:"担心太多而不动"},
+    {yi:"灵活换方法", ji:"聪明反被聪明误"},
+    {yi:"把标准说清楚", ji:"批评过头"},
+    {yi:"守住承诺和信任", ji:"防御心太重"},
+    {yi:"善待自己也善待关系", ji:"贪舒服而放松边界"}
   ]
 };
 
-function almanacKey(phaseIdx,moonSignIdx,dayIdx){
-  return`${phaseIdx}-${moonSignIdx}-${dayIdx}`;
-}
-
-function buildAlmanacCombosZh(){
-  const map={};
-  for(let p=0;p<ALMANAC_ZH.phase.length;p++){
-    for(let s=0;s<ALMANAC_ZH.sign.length;s++){
-      for(let d=0;d<ALMANAC_ZH.day.length;d++){
-        const hash=p*84+s*7+d;
-        map[almanacKey(p,s,d)]={
-          yi:ALMANAC_ZH.yiTemplates[hash%ALMANAC_ZH.yiTemplates.length]({p:ALMANAC_ZH.phase[p],s:ALMANAC_ZH.sign[s],d:ALMANAC_ZH.day[d]}),
-          ji:ALMANAC_ZH.jiTemplates[hash%ALMANAC_ZH.jiTemplates.length]({p:ALMANAC_ZH.phase[p],s:ALMANAC_ZH.sign[s],d:ALMANAC_ZH.day[d]})
-        };
-      }
-    }
-  }
-  return map;
-}
-
-const ALMANAC_COMBOS_ZH = buildAlmanacCombosZh();
+const ALMANAC_EN = {
+  phase: [
+    {label:"New Moon", note:"A reset point in the lunar cycle. Better for intention, quiet starts, and leaving space before things become visible.", yi:"set a clean intention", ji:"overfill the day before it has shape"},
+    {label:"Waxing Crescent", note:"The first visible growth after the new moon. Better for testing, starting, and taking the first usable step.", yi:"test a first step", ji:"stay only in planning mode"},
+    {label:"First Quarter", note:"A half-lit checkpoint with more friction. Better for deciding, prioritizing, and moving through resistance.", yi:"make a clear decision", ji:"keep circling the same choice"},
+    {label:"Waxing Gibbous", note:"The pre-peak refinement phase. Better for editing, improving, and preparing the reveal.", yi:"refine the details", ji:"rush the final pass"},
+    {label:"Full Moon", note:"The brightest point of the cycle. Better for seeing results, receiving feedback, and bringing things into view.", yi:"review what is visible", ji:"avoid feedback or overreact to it"},
+    {label:"Waning Gibbous", note:"The first release after fullness. Better for reflection, sharing, and deciding what is worth continuing.", yi:"reflect and integrate", ji:"keep adding effort without review"},
+    {label:"Last Quarter", note:"A decreasing half moon with cleanup energy. Better for pruning, repairing, and reducing scope.", yi:"cut excess and repair gaps", ji:"start another unnecessary thread"},
+    {label:"Waning Crescent", note:"The closing sliver before the next reset. Better for closure, clearing, and leaving quiet space.", yi:"close loops and clear space", ji:"force maximum output"}
+  ],
+  sign: [
+    {label:"Aries", note:"Moon in Aries favors speed, directness, and first moves, but not heat for its own sake.", yi:"move directly", ji:"push from irritation"},
+    {label:"Taurus", note:"Moon in Taurus favors steadiness, the body, material reality, and practical calm.", yi:"stabilize the rhythm", ji:"change course impulsively"},
+    {label:"Gemini", note:"Moon in Gemini favors messages, information, and light movement, but can scatter attention.", yi:"communicate clearly", ji:"split attention too far"},
+    {label:"Cancer", note:"Moon in Cancer favors home, care, memory, and emotional safety.", yi:"care for the inner layer", ji:"hide every feeling until it hardens"},
+    {label:"Leo", note:"Moon in Leo favors visibility, creativity, and warm self-expression.", yi:"express the main point", ji:"perform more than the moment needs"},
+    {label:"Virgo", note:"Moon in Virgo favors editing, sorting, maintenance, and useful precision.", yi:"organize the details", ji:"get trapped in minor flaws"},
+    {label:"Libra", note:"Moon in Libra favors balance, aesthetics, negotiation, and social calibration.", yi:"restore balance through dialogue", ji:"please everyone at your own expense"},
+    {label:"Scorpio", note:"Moon in Scorpio favors depth, focus, and seeing what sits under the surface.", yi:"address the real issue", ji:"turn suspicion into certainty"},
+    {label:"Sagittarius", note:"Moon in Sagittarius favors perspective, candor, movement, and a wider view.", yi:"look farther ahead", ji:"promise beyond capacity"},
+    {label:"Capricorn", note:"Moon in Capricorn favors structure, responsibility, time, and concrete outcomes.", yi:"set the structure", ji:"carry pressure without support"},
+    {label:"Aquarius", note:"Moon in Aquarius favors distance, systems thinking, and unconventional solutions.", yi:"reframe the system", ji:"be detached to the point of coldness"},
+    {label:"Pisces", note:"Moon in Pisces favors imagination, softness, compassion, and permeability.", yi:"make room for feeling", ji:"let boundaries dissolve"}
+  ],
+  day: [
+    {label:"Sun Day", note:"Sunday carries the cultural symbolism of the Sun: visibility, vitality, and the main thread.", yi:"set the main tone", ji:"scatter energy without a center"},
+    {label:"Moon Day", note:"Monday carries the cultural symbolism of the Moon: care, mood, home, and adjustment.", yi:"adjust gently", ji:"push through emotional depletion"},
+    {label:"Mars Day", note:"Tuesday carries the cultural symbolism of Mars: action, courage, friction, and clearing obstacles.", yi:"clear a difficult obstacle", ji:"turn tension into conflict"},
+    {label:"Mercury Day", note:"Wednesday carries the cultural symbolism of Mercury: language, messages, schedules, and thinking.", yi:"write, speak, and organize", ji:"leave messages ambiguous"},
+    {label:"Jupiter Day", note:"Thursday carries the cultural symbolism of Jupiter: growth, learning, opportunity, and long range vision.", yi:"think bigger and plan long", ji:"miss the wider pattern"},
+    {label:"Venus Day", note:"Friday carries the cultural symbolism of Venus: relationships, pleasure, beauty, and repair.", yi:"repair tone and relationship", ji:"make the atmosphere harder"},
+    {label:"Saturn Day", note:"Saturday carries the cultural symbolism of Saturn: structure, responsibility, patience, and pruning.", yi:"prune and repair", ji:"avoid the responsibility that keeps returning"}
+  ],
+  west: [
+    {yi:"keep ambition realistic", ji:"overpressure yourself"},
+    {yi:"preserve independent judgment", ji:"be different only to be different"},
+    {yi:"soften while keeping boundaries", ji:"float without direction"},
+    {yi:"begin before overthinking", ji:"charge ahead blindly"},
+    {yi:"protect resources and pace", ji:"refuse to adapt"},
+    {yi:"make the message clear", ji:"open too many threads"},
+    {yi:"support emotional safety", ji:"turn small feelings into heavy silence"},
+    {yi:"state your center with warmth", ji:"perform for approval"},
+    {yi:"make the details useful", ji:"polish until nothing moves"},
+    {yi:"negotiate toward balance", ji:"over-adjust for others"},
+    {yi:"act after seeing the core", ji:"treat suspicion as proof"},
+    {yi:"widen the frame", ji:"promise beyond execution"}
+  ],
+  chinese: [
+    {yi:"notice openings early", ji:"overthink every small signal"},
+    {yi:"build through consistency", ji:"move too slowly for the window"},
+    {yi:"use courage cleanly", ji:"let impulse outrun judgment"},
+    {yi:"keep the atmosphere gentle", ji:"avoid the needed conversation"},
+    {yi:"use presence for something real", ji:"overdo the force"},
+    {yi:"observe before acting", ji:"test people too much"},
+    {yi:"keep useful freedom", ji:"reject every boundary"},
+    {yi:"make the environment kinder", ji:"worry yourself into stillness"},
+    {yi:"improvise intelligently", ji:"outsmart the simple answer"},
+    {yi:"name the standard clearly", ji:"criticize past usefulness"},
+    {yi:"protect trust and promises", ji:"become too defensive"},
+    {yi:"choose generosity with limits", ji:"relax every boundary"}
+  ]
+};
 
 // ═══════════════════════════════════════════════════════════════
 //  SHARED EMOJI ARRAYS
@@ -2508,34 +2579,55 @@ function closeDetail(){
 
 function displayWesternName(idx){
   return lang==='zh'
-    ?`${LANG.zh.westNames[idx]} · ${LANG.en.westNames[idx]}`
+    ?LANG.zh.westNames[idx]
     :LANG.en.westNames[idx];
 }
 
 function displayChineseZodiacName(idx){
   return lang==='zh'
-    ?`${LANG.zh.chiNames[idx]}年 · ${LANG.en.chiNames[idx]}`
+    ?`${LANG.zh.chiNames[idx]}年`
     :LANG.en.yearOf(LANG.en.chiNames[idx]);
 }
 
 function displayMoonSignName(idx){
   return lang==='zh'
-    ?`${LANG.zh.zodiacNames[idx]} · ${LANG.en.zodiacNames[idx]}`
+    ?LANG.zh.zodiacNames[idx]
     :LANG.en.zodiacNames[idx];
 }
 
-function getAlmanacComboZh(){
-  return ALMANAC_COMBOS_ZH[almanacKey(readingState.phaseIdx,readingState.moonSignIdx,readingState.dayIdx)];
+function getAlmanacPack(){
+  return lang==='zh'?ALMANAC_ZH:ALMANAC_EN;
+}
+
+function buildAlmanacAdvice(){
+  const pack=getAlmanacPack();
+  const phase=pack.phase[readingState.phaseIdx];
+  const sign=pack.sign[readingState.moonSignIdx];
+  const day=pack.day[readingState.dayIdx];
+  const west=pack.west[readingState.westIdx];
+  const zodiac=pack.chinese[readingState.chineseIdx];
+  if(lang==='zh'){
+    return{
+      yi:`${phase.yi}；以${sign.yi}为方法，借${day.yi}推进，兼顾${west.yi}与${zodiac.yi}。`,
+      ji:`${phase.ji}；少做${sign.ji}，避免${day.ji}，尤其别让${west.ji}和${zodiac.ji}叠在一起。`
+    };
+  }
+  return{
+    yi:`${phase.yi}; use ${sign.yi}, lean on ${day.yi}, and keep ${west.yi} with ${zodiac.yi}.`,
+    ji:`${phase.ji}; avoid ${sign.ji}, watch ${day.ji}, and do not let ${west.ji} combine with ${zodiac.ji}.`
+  };
 }
 
 function buildAlmanacDetail(activeTab='phase'){
-  const phase=ALMANAC_ZH.phase[readingState.phaseIdx];
-  const sign=ALMANAC_ZH.sign[readingState.moonSignIdx];
-  const day=ALMANAC_ZH.day[readingState.dayIdx];
+  const pack=getAlmanacPack();
+  const phase=pack.phase[readingState.phaseIdx];
+  const day=pack.day[readingState.dayIdx];
   return{
-    kicker:'今日宜忌',
-    title:'今日宜忌视窗',
-    subtitle:`${phase.label} · 月入${LANG.zh.zodiacNames[readingState.moonSignIdx]} · ${day.label}`,
+    kicker:lang==='zh'?'今日宜忌':'Daily Almanac',
+    title:lang==='zh'?'今日宜忌视窗':'Daily Almanac',
+    subtitle:lang==='zh'
+      ?`${phase.label} · 月入${LANG.zh.zodiacNames[readingState.moonSignIdx]} · ${day.label}`
+      :`${phase.label} · Moon in ${LANG.en.zodiacNames[readingState.moonSignIdx]} · ${day.label}`,
     facts:[],
     paragraphs:[],
     custom:{
@@ -2547,26 +2639,29 @@ function buildAlmanacDetail(activeTab='phase'){
 
 function renderAlmanacCustom(config){
   const custom=$('detail-custom');
-  const combo=getAlmanacComboZh();
+  const pack=getAlmanacPack();
+  const combo=buildAlmanacAdvice();
   const activeTab=config.activeTab||'phase';
   const items={
     phase:{
-      label:'月相',
-      value:`${MOON_EMOJI[readingState.phaseIdx]} ${ALMANAC_ZH.phase[readingState.phaseIdx].label}`,
-      title:`${MOON_EMOJI[readingState.phaseIdx]} ${ALMANAC_ZH.phase[readingState.phaseIdx].label}`,
-      note:ALMANAC_ZH.phase[readingState.phaseIdx].note
+      label:lang==='zh'?'月相':'Moon Phase',
+      value:`${MOON_EMOJI[readingState.phaseIdx]} ${pack.phase[readingState.phaseIdx].label}`,
+      title:`${MOON_EMOJI[readingState.phaseIdx]} ${pack.phase[readingState.phaseIdx].label}`,
+      note:pack.phase[readingState.phaseIdx].note
     },
     moonSign:{
-      label:'月入星座',
+      label:lang==='zh'?'月入星座':'Moon Sign',
       value:`🌙 ${displayMoonSignName(readingState.moonSignIdx)}`,
-      title:`🌙 月入${displayMoonSignName(readingState.moonSignIdx)}`,
-      note:ALMANAC_ZH.sign[readingState.moonSignIdx].note
+      title:lang==='zh'
+        ?`🌙 月入${displayMoonSignName(readingState.moonSignIdx)}`
+        :`🌙 Moon in ${displayMoonSignName(readingState.moonSignIdx)}`,
+      note:pack.sign[readingState.moonSignIdx].note
     },
     day:{
-      label:'今日之日',
-      value:`${PLANET_EMOJI[readingState.dayIdx]} ${ALMANAC_ZH.day[readingState.dayIdx].label}`,
-      title:`${PLANET_EMOJI[readingState.dayIdx]} ${ALMANAC_ZH.day[readingState.dayIdx].label}`,
-      note:ALMANAC_ZH.day[readingState.dayIdx].note
+      label:lang==='zh'?'今日之日':'Day Ruler',
+      value:`${PLANET_EMOJI[readingState.dayIdx]} ${pack.day[readingState.dayIdx].label}`,
+      title:`${PLANET_EMOJI[readingState.dayIdx]} ${pack.day[readingState.dayIdx].label}`,
+      note:pack.day[readingState.dayIdx].note
     }
   };
 
@@ -2591,11 +2686,11 @@ function renderAlmanacCustom(config){
       </div>
       <div class="almanac-yi-grid">
         <div class="almanac-yi-card do">
-          <div class="almanac-yi-label">今日宜</div>
+          <div class="almanac-yi-label">${lang==='zh'?'今日宜':"Today's Do"}</div>
           <div class="almanac-yi-text">${escapeHtml(combo.yi)}</div>
         </div>
         <div class="almanac-yi-card dont">
-          <div class="almanac-yi-label">今日不宜</div>
+          <div class="almanac-yi-label">${lang==='zh'?'今日不宜':'Avoid'}</div>
           <div class="almanac-yi-text">${escapeHtml(combo.ji)}</div>
         </div>
       </div>
@@ -2764,12 +2859,13 @@ function buildSuggestionDetail(){
 function getDetailPayload(type,key){
   if(!readingState)return null;
   switch(type){
+    case 'almanac': return buildAlmanacDetail('phase');
     case 'western': return buildWesternDetail(Number(key));
     case 'chinese': return buildChineseDetail(Number(key));
-    case 'moon-phase': return lang==='zh'?buildAlmanacDetail('phase'):buildMoonPhaseDetail(Number(key));
-    case 'moon-sign': return lang==='zh'?buildAlmanacDetail('moonSign'):buildMoonSignDetail(Number(key));
-    case 'planet-day': return lang==='zh'?buildAlmanacDetail('day'):buildPlanetDetail(Number(key));
-    case 'astro': return lang==='zh'?buildAlmanacDetail('phase'):buildAstroDetail();
+    case 'moon-phase': return buildAlmanacDetail('phase');
+    case 'moon-sign': return buildAlmanacDetail('moonSign');
+    case 'planet-day': return buildAlmanacDetail('day');
+    case 'astro': return buildAlmanacDetail('phase');
     case 'category': return buildCategoryDetail(key);
     case 'oracle': return buildOracleDetail();
     case 'suggestion': return buildSuggestionDetail();
@@ -2832,7 +2928,7 @@ function renderReading(bday){
   const planetEmoji=PLANET_EMOJI[today.getDay()];
   const planetDayLabel=lang==='zh'?`${planetName}日`:`${planetName} Day`;
 
-  // Astrological basis line for #r-astro
+  // Astrological basis label for detail views
   const aspName=L.aspectNames[calc.asp];
   const moonInLabel=lang==='zh'
     ?`月亮${aspName?aspName+'相·':''}月入${moonSignName}`
@@ -2862,11 +2958,30 @@ function renderReading(bday){
 
   $('r-signs').innerHTML=`
     <button type="button" class="badge badge-btn" data-detail="western" data-key="${wi}">${wsEmoji} ${wsName}</button>
-    <button type="button" class="badge badge-btn" data-detail="chinese" data-key="${ci}">${czEmoji} ${lang==='zh'?czName+'年':L.yearOf(czName)}</button>
-    <button type="button" class="badge badge-btn" data-detail="moon-phase" data-key="${mi}">${moonEmoji} ${moonName}</button>
-    <button type="button" class="badge badge-btn" data-detail="moon-sign" data-key="${calc.moonSignIdx}">🌙 ${lang==='zh'?'月入':'Moon in'} ${moonSignName}</button>
-    <button type="button" class="badge badge-btn" data-detail="planet-day" data-key="${today.getDay()}">${planetEmoji} ${planetDayLabel}</button>`;
-  tx('r-astro', moonInLabel);
+    <button type="button" class="badge badge-btn" data-detail="chinese" data-key="${ci}">${czEmoji} ${lang==='zh'?czName+'年':L.yearOf(czName)}</button>`;
+
+  $('almanac-summary').innerHTML=`
+    <div class="almanac-summary-head">
+      <div>
+        <div class="almanac-summary-kicker">${lang==='zh'?'今日宜忌':'Daily Almanac'}</div>
+        <div class="almanac-summary-title">${lang==='zh'?'今日天象':'Today’s Sky'}</div>
+      </div>
+      <div class="almanac-summary-more">${lang==='zh'?'点击展开':'Tap to open'}</div>
+    </div>
+    <div class="almanac-summary-grid">
+      <div class="almanac-summary-item">
+        <div class="almanac-summary-label">${lang==='zh'?'月相':'Moon'}</div>
+        <div class="almanac-summary-value">${moonEmoji} ${moonName}</div>
+      </div>
+      <div class="almanac-summary-item">
+        <div class="almanac-summary-label">${lang==='zh'?'月入':'Moon In'}</div>
+        <div class="almanac-summary-value">🌙 ${lang==='zh'?moonSignName:`${moonSignName}`}</div>
+      </div>
+      <div class="almanac-summary-item">
+        <div class="almanac-summary-label">${lang==='zh'?'今日':'Day'}</div>
+        <div class="almanac-summary-value">${planetEmoji} ${planetDayLabel}</div>
+      </div>
+    </div>`;
 
   // Category cards
   $('cat-grid').innerHTML=CAT_KEYS.map((k,i)=>`
