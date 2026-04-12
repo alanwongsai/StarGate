@@ -69,8 +69,19 @@
       -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
     }
 
-    /* inactive dot darker on light bg */
-    html[data-theme="light"] .dot{background:rgba(20,12,4,.14)}
+    /* section ratings need stronger contrast on light bg */
+    html[data-theme="light"] .dot{
+      background:rgba(20,12,4,.22);
+      box-shadow:inset 0 0 0 1px rgba(20,12,4,.08);
+    }
+    html[data-theme="light"] .dot.on{
+      background:#8f6a18;
+      box-shadow:
+        0 0 0 1px rgba(255,248,236,.92),
+        0 0 0 2px rgba(143,106,24,.18),
+        0 3px 10px rgba(143,106,24,.22);
+    }
+    html[data-theme="light"] .r-lbl{color:rgba(20,12,4,.62)}
 
     /* badge on light bg */
     html[data-theme="light"] .badge{
