@@ -2401,7 +2401,7 @@ function buildWesternDetail(idx){
     title:`${WEST_EMOJI[idx]} ${displayWesternName(idx)}`,
     subtitle:item.range,
     facts:item.facts,
-    paragraphs:[item.summary,item.extra,item.notable]
+    paragraphs:[item.summary,item.extra]
   };
 }
 
@@ -2415,7 +2415,7 @@ function buildChineseDetail(idx){
       ?`${readingState.birthYear}年出生对应生肖 · ${item.cycle}`
       :`Birth year ${readingState.birthYear} · ${item.cycle}`,
     facts:item.facts,
-    paragraphs:[item.summary,item.extra,item.notable]
+    paragraphs:[item.summary,item.extra]
   };
 }
 
@@ -2427,7 +2427,16 @@ function buildMoonPhaseDetail(idx){
     title:`${MOON_EMOJI[idx]} ${L.moonNames[idx]}`,
     subtitle:item.subtitle,
     facts:item.facts,
-    paragraphs:[item.summary,item.extra]
+    paragraphs:[
+      item.summary,
+      item.extra,
+      lang==='zh'
+        ?'科学上，月相来自太阳、地球、月亮相对位置的变化，也就是我们从地球上看到的月面受光比例在变；它是真实可观测的天文现象。'
+        :'Scientifically, moon phases come from the changing Sun-Earth-Moon geometry, which changes how much of the moon’s sunlit face we can see from Earth.',
+      lang==='zh'
+        ?'如果想把它用成一种“今日节律提示”，比较稳妥的理解是：它更像观察自然周期的方式，而不是对个人命运的硬性决定。'
+        :'If you use it as a rhythm cue for the day, the grounded interpretation is that it marks a visible natural cycle, not a proven controller of personal fate.'
+    ]
   };
 }
 
@@ -2447,7 +2456,10 @@ function buildMoonSignDetail(idx){
         ?'月入星座描述的是今天情绪、本能与安全感更容易通过什么方式表达。'
         :'Moon-in-sign describes how the emotional tone of the day is likely to move.',
       sign.moonFocus,
-      aspect.summary
+      aspect.summary,
+      lang==='zh'
+        ?'从天文上说，这里指的是月亮当天沿黄道运行到哪个黄道区段；这是可以计算和观测的位置变化。把它解释成“今天比较适合什么气质”，属于象征性阅读，不是已被证实的因果科学。'
+        :'Astronomically, this refers to which section of the ecliptic the moon is moving through today. That position is measurable; the personality-style reading on top of it is symbolic rather than established causal science.'
     ]
   };
 }
@@ -2460,7 +2472,16 @@ function buildPlanetDetail(idx){
     title:`${PLANET_EMOJI[idx]} ${readingState.planetDayLabel}`,
     subtitle:item.title,
     facts:item.facts,
-    paragraphs:[item.summary,item.extra]
+    paragraphs:[
+      item.summary,
+      item.extra,
+      lang==='zh'
+        ?'更严格地说，所谓“太阳日 / 月亮日 / 水星日”主要来自古典历法与星期命名传统，本身更接近文化时间感，而不是现代科学里会直接影响行为的物理机制。'
+        :'More strictly, labels like Sun Day, Moon Day, or Mercury Day come from classical calendar and weekday naming traditions. They are cultural time-markers more than a modern scientific physical mechanism.',
+      lang==='zh'
+        ?'如果你喜欢一点像黄历的感觉，可以把它当成“今天适合偏向哪类安排”的轻提示，比如水星日偏沟通整理，金星日偏关系审美，土星日偏收束、整理、减法。'
+        :'If you want a mild almanac-like feel, the grounded version is to treat it as a cultural cue for what kind of day suits what kind of task: Mercury for communication, Venus for relationships and aesthetics, Saturn for structure and pruning.'
+    ]
   };
 }
 
@@ -2481,7 +2502,10 @@ function buildAstroDetail(){
       moonItem.moonFocus,
       lang==='zh'
         ?'它不会改写原文，但会解释今天整体情绪底色为什么更偏向这个方向。'
-        :'It does not rewrite the messages, but it does explain the emotional tilt behind today’s reading.'
+        :'It does not rewrite the messages, but it does explain the emotional tilt behind today’s reading.',
+      lang==='zh'
+        ?'这行里真正可计算的部分，是月亮当天的位置和它与本命星座形成的角度；至于“今天读起来像什么”，则是建立在这些位置之上的解释层。'
+        :'The computable part here is the moon’s current position and its angle relative to your natal sign; the rest is the interpretive layer built on top of those positions.'
     ]
   };
 }
