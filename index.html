@@ -108,6 +108,7 @@
       font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',system-ui,sans-serif;
       color:var(--t1);overflow-x:hidden;
     }
+    body.modal-open{overflow:hidden}
 
     /* ── BACKGROUND ───────────────────────────── */
     .bg{position:fixed;inset:0;z-index:0;pointer-events:none}
@@ -236,8 +237,25 @@
       border-radius:20px;padding:5px 13px;font-size:13px;color:var(--t2);
       display:flex;align-items:center;gap:5px;
     }
+    .badge-btn{
+      border:none;cursor:pointer;font-family:inherit;text-align:left;
+      transition:transform .22s ease,border-color .22s ease,background .22s ease,box-shadow .22s ease,color .22s ease;
+    }
+    .badge-btn:hover,.badge-btn:focus-visible{
+      transform:translateY(-1px);
+      border-color:rgba(196,165,90,.26);
+      background:rgba(255,252,248,.08);
+      color:var(--t1);
+      box-shadow:0 10px 24px rgba(0,0,0,.16);
+      outline:none;
+    }
 
-    .r-astro{font-size:11px;color:var(--gold);opacity:.50;letter-spacing:.8px;text-align:center;margin-top:8px;min-height:14px}
+    .r-astro{
+      font-size:11px;color:var(--gold);opacity:.50;letter-spacing:.8px;text-align:center;margin-top:8px;min-height:14px;
+      transition:opacity .2s ease,color .2s ease,transform .2s ease;
+    }
+    .r-astro.detail-trigger{cursor:pointer}
+    .r-astro.detail-trigger:hover,.r-astro.detail-trigger:focus-visible{opacity:.82;transform:translateY(-1px);outline:none}
 
     /* ── CATEGORY GRID ────────────────────────── */
     .cat-grid{width:100%;max-width:430px;display:grid;grid-template-columns:1fr 1fr;gap:11px}
@@ -271,6 +289,91 @@
     .r-foot-info{font-size:12px;color:var(--t3)}
     .btn-reset{background:none;border:none;font-size:12px;color:var(--t3);cursor:pointer;font-family:inherit;text-decoration:underline;text-underline-offset:2px;padding:4px;transition:color .2s}
     .btn-reset:hover{color:var(--t2)}
+
+    .interactive-card{
+      cursor:pointer;
+      transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease,background .22s ease;
+      position:relative;
+      overflow:hidden;
+    }
+    .interactive-card::after{
+      content:"";
+      position:absolute;inset:0;
+      background:linear-gradient(135deg,rgba(255,255,255,.08),transparent 40%,transparent 62%,rgba(196,165,90,.08));
+      opacity:0;transition:opacity .22s ease;
+      pointer-events:none;
+    }
+    .interactive-card:hover,.interactive-card:focus-visible{
+      transform:translateY(-2px);
+      border-color:rgba(196,165,90,.28);
+      box-shadow:0 14px 34px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,252,248,.08);
+      outline:none;
+    }
+    .interactive-card:hover::after,.interactive-card:focus-visible::after{opacity:1}
+    html[data-theme="light"] .interactive-card:hover,
+    html[data-theme="light"] .interactive-card:focus-visible{
+      box-shadow:0 12px 28px rgba(0,0,0,.12),inset 0 1px 0 rgba(255,255,255,.70);
+    }
+
+    /* ── DETAIL POPUP ─────────────────────────── */
+    .detail-modal{
+      position:fixed;inset:0;z-index:500;
+      display:flex;align-items:flex-end;justify-content:center;
+      padding:20px 14px max(20px,env(safe-area-inset-bottom,20px));
+      background:rgba(7,6,10,.52);
+      backdrop-filter:blur(24px) saturate(140%);
+      -webkit-backdrop-filter:blur(24px) saturate(140%);
+      opacity:0;pointer-events:none;
+      transition:opacity .24s ease;
+    }
+    .detail-modal.open{opacity:1;pointer-events:auto}
+    html[data-theme="light"] .detail-modal{background:rgba(245,240,232,.58)}
+    .detail-sheet{
+      width:min(100%,540px);max-height:min(84vh,760px);
+      overflow:auto;padding:26px 22px 22px;border-radius:30px;position:relative;
+      background:
+        linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,255,255,.02)),
+        linear-gradient(135deg,rgba(196,165,90,.10),transparent 36%,rgba(255,255,255,.04));
+      transform:translateY(22px) scale(.98);
+      transition:transform .28s cubic-bezier(.2,.8,.2,1);
+    }
+    .detail-modal.open .detail-sheet{transform:translateY(0) scale(1)}
+    html[data-theme="light"] .detail-sheet{
+      background:
+        linear-gradient(180deg,rgba(255,255,255,.78),rgba(255,255,255,.42)),
+        linear-gradient(135deg,rgba(168,130,30,.12),transparent 36%,rgba(255,255,255,.35));
+    }
+    .detail-close{
+      position:absolute;top:16px;right:16px;
+      width:36px;height:36px;border:none;border-radius:50%;
+      background:rgba(255,252,248,.08);color:var(--t1);cursor:pointer;
+      font-size:17px;font-family:inherit;transition:background .2s ease,transform .2s ease;
+    }
+    .detail-close:hover,.detail-close:focus-visible{background:rgba(255,252,248,.14);transform:scale(1.04);outline:none}
+    html[data-theme="light"] .detail-close{background:rgba(20,12,4,.06)}
+    html[data-theme="light"] .detail-close:hover,
+    html[data-theme="light"] .detail-close:focus-visible{background:rgba(20,12,4,.10)}
+    .detail-kicker{font-size:11px;font-weight:700;letter-spacing:1.7px;text-transform:uppercase;color:var(--gold);opacity:.84;margin-bottom:10px}
+    .detail-title{font-size:30px;line-height:1.08;letter-spacing:-.5px;margin-right:42px}
+    .detail-sub{font-size:14px;color:var(--t2);line-height:1.55;margin-top:10px}
+    .detail-facts{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 16px}
+    .detail-pill{
+      padding:8px 12px;border-radius:999px;
+      background:rgba(255,252,248,.06);border:1px solid rgba(255,252,248,.10);
+      color:var(--t2);font-size:12px;letter-spacing:.2px;
+    }
+    html[data-theme="light"] .detail-pill{
+      background:rgba(20,12,4,.05);border-color:rgba(20,12,4,.10);
+    }
+    .detail-copy{display:flex;flex-direction:column;gap:12px}
+    .detail-copy p{font-size:16px;line-height:1.72;color:var(--t1)}
+    .detail-copy p strong{color:var(--t1)}
+
+    @media (max-width:560px){
+      .detail-sheet{padding:24px 18px 20px;border-radius:26px}
+      .detail-title{font-size:25px}
+      .detail-copy p{font-size:15.5px}
+    }
 
     /* ── ANIMATION ────────────────────────────── */
     .fu{animation:fadeUp .55s ease both}
@@ -312,14 +415,14 @@
     <div class="r-date"  id="r-date"></div>
     <div class="r-title" id="r-title"></div>
     <div class="signs-row" id="r-signs"></div>
-    <div class="r-astro" id="r-astro"></div>
+    <div class="r-astro detail-trigger" id="r-astro" tabindex="0" role="button" data-detail="astro"></div>
   </div>
   <div class="cat-grid" id="cat-grid"></div>
-  <div class="glass oracle-card fu d5">
+  <div class="glass oracle-card interactive-card fu d5" id="oracle-card" tabindex="0" role="button" data-detail="oracle">
     <div class="oracle-lbl" id="oracle-lbl"></div>
     <div class="oracle-txt" id="oracle-txt"></div>
   </div>
-  <div class="card sug-card fu d6">
+  <div class="card sug-card interactive-card fu d6" id="suggestion-card" tabindex="0" role="button" data-detail="suggestion">
     <div class="sug-icon">🎯</div>
     <div>
       <div class="sug-lbl" id="sug-lbl"></div>
@@ -329,6 +432,17 @@
   <div class="r-footer fu d7">
     <span class="r-foot-info" id="r-foot"></span>
     <button class="btn-reset" id="btn-reset" onclick="resetBday()"></button>
+  </div>
+</div>
+
+<div class="detail-modal" id="detail-modal" aria-hidden="true">
+  <div class="glass detail-sheet" role="dialog" aria-modal="true" aria-labelledby="detail-title">
+    <button class="detail-close" id="detail-close" type="button" onclick="closeDetail()">✕</button>
+    <div class="detail-kicker" id="detail-kicker"></div>
+    <div class="detail-title" id="detail-title"></div>
+    <div class="detail-sub" id="detail-sub"></div>
+    <div class="detail-facts" id="detail-facts"></div>
+    <div class="detail-copy" id="detail-copy"></div>
   </div>
 </div>
 
@@ -348,6 +462,7 @@ const LANG = {
     oracleLbl:   "✦  Today's Oracle",
     sugLbl:      "Cosmic Suggestion",
     changeBtn:   "Change birthday",
+    detailClose: "Close details",
     resetMsg:    "Reset your birthday? The stars will need to meet you again.",
     langToggle:  "中文",
     readingTitles:["Your Daily Reading","The Stars Speak","Today's Oracle","Cosmic Forecast","The Universe Weighs In"],
@@ -818,6 +933,7 @@ const LANG = {
     oracleLbl:   "✦  今日神谕",
     sugLbl:      "宇宙建议",
     changeBtn:   "修改生日",
+    detailClose: "关闭详情",
     resetMsg:    "重置生日？星辰将需要重新认识你。",
     langToggle:  "EN",
     readingTitles:["今日星盘解读","星辰有话说","神谕降临","宇宙预言","今日运势"],
@@ -1279,6 +1395,655 @@ const LANG = {
   }
 };
 
+const DETAILS = {
+  en: {
+    labels: {
+      western: "Western Zodiac",
+      chinese: "Chinese Zodiac",
+      phase: "Moon Phase",
+      moonSign: "Moon In Sign",
+      planet: "Planetary Day",
+      astro: "Astrology Snapshot",
+      section: "Today's Reading",
+      oracle: "Today's Oracle",
+      suggestion: "Cosmic Suggestion"
+    },
+    western: [
+      {
+        range: "March 21 - April 19",
+        facts: ["Element: Fire", "Mode: Cardinal", "Traits: bold, direct, initiating"],
+        summary: "Aries is the ignition spark of the zodiac. It likes momentum, challenge, and being first through the door.",
+        extra: "Typical Aries energy is brave, impatient, competitive, and refreshingly honest when it is balanced.",
+        moonFocus: "When the moon moves through Aries, the day feels faster, sharper, and more action-oriented than usual.",
+        notable: "Examples: Lady Gaga, Maya Angelou, Thomas Jefferson."
+      },
+      {
+        range: "April 20 - May 20",
+        facts: ["Element: Earth", "Mode: Fixed", "Traits: steady, sensual, loyal"],
+        summary: "Taurus is the stabilizer sign. It values comfort, reliability, beauty, and anything built to last.",
+        extra: "Typical Taurus energy is grounded, patient, stubborn, and very tuned to the physical world.",
+        moonFocus: "When the moon moves through Taurus, people often want calm, consistency, good food, and less chaos.",
+        notable: "Examples: Adele, David Attenborough, Queen Elizabeth II."
+      },
+      {
+        range: "May 21 - June 20",
+        facts: ["Element: Air", "Mode: Mutable", "Traits: curious, witty, adaptable"],
+        summary: "Gemini is the messenger sign. It thrives on ideas, conversation, variety, and quick mental movement.",
+        extra: "Typical Gemini energy is bright, social, restless, and excellent at noticing patterns and possibilities.",
+        moonFocus: "When the moon moves through Gemini, the mood becomes more talkative, mobile, and mentally busy.",
+        notable: "Examples: Angelina Jolie, Prince, John F. Kennedy."
+      },
+      {
+        range: "June 21 - July 22",
+        facts: ["Element: Water", "Mode: Cardinal", "Traits: protective, intuitive, loyal"],
+        summary: "Cancer is the caretaker sign. It is deeply connected to home, memory, family, emotional safety, and instinct.",
+        extra: "Typical Cancer energy is gentle on the outside, strong underneath, and highly aware of what people feel but do not say.",
+        moonFocus: "When the moon moves through Cancer, feelings, home life, closeness, and self-protection come to the front.",
+        notable: "Examples: Princess Diana, Frida Kahlo, Nelson Mandela."
+      },
+      {
+        range: "July 23 - August 22",
+        facts: ["Element: Fire", "Mode: Fixed", "Traits: radiant, confident, generous"],
+        summary: "Leo is the solar sign of visibility and heart. It wants life to feel creative, vivid, and fully lived.",
+        extra: "Typical Leo energy is expressive, warm, proud, and naturally drawn to courage, play, and leadership.",
+        moonFocus: "When the moon moves through Leo, people often want more attention, joy, drama, and creative expression.",
+        notable: "Examples: Barack Obama, Madonna, Neil Armstrong."
+      },
+      {
+        range: "August 23 - September 22",
+        facts: ["Element: Earth", "Mode: Mutable", "Traits: precise, thoughtful, practical"],
+        summary: "Virgo is the sign of refinement. It notices details, wants systems to work, and prefers improvement over noise.",
+        extra: "Typical Virgo energy is observant, helpful, discerning, and sometimes a little too aware of what still needs fixing.",
+        moonFocus: "When the moon moves through Virgo, the day leans toward order, useful effort, and cleaning up loose ends.",
+        notable: "Examples: Beyonce, Keanu Reeves, Mother Teresa."
+      },
+      {
+        range: "September 23 - October 22",
+        facts: ["Element: Air", "Mode: Cardinal", "Traits: diplomatic, elegant, balancing"],
+        summary: "Libra is the relationship sign. It seeks harmony, fairness, proportion, and beauty between people.",
+        extra: "Typical Libra energy is charming, strategic, idealistic, and always trying to improve the tone of the room.",
+        moonFocus: "When the moon moves through Libra, connection, aesthetics, compromise, and social awareness become stronger themes.",
+        notable: "Examples: Serena Williams, Mahatma Gandhi, Oscar Wilde."
+      },
+      {
+        range: "October 23 - November 21",
+        facts: ["Element: Water", "Mode: Fixed", "Traits: intense, perceptive, loyal"],
+        summary: "Scorpio is the depth sign. It is drawn to truth, power, transformation, and the things people usually keep hidden.",
+        extra: "Typical Scorpio energy is magnetic, private, all-in, and difficult to fool once it has locked onto something real.",
+        moonFocus: "When the moon moves through Scorpio, feelings intensify and people tend to crave honesty over surface politeness.",
+        notable: "Examples: Marie Curie, Leonardo DiCaprio, Indira Gandhi."
+      },
+      {
+        range: "November 22 - December 21",
+        facts: ["Element: Fire", "Mode: Mutable", "Traits: adventurous, candid, expansive"],
+        summary: "Sagittarius is the horizon sign. It wants movement, meaning, freedom, and a bigger view of life.",
+        extra: "Typical Sagittarius energy is optimistic, blunt, funny, and always looking for the next idea, road, or revelation.",
+        moonFocus: "When the moon moves through Sagittarius, the day feels more restless, direct, playful, and future-facing.",
+        notable: "Examples: Jane Austen, Winston Churchill, Taylor Swift."
+      },
+      {
+        range: "December 22 - January 19",
+        facts: ["Element: Earth", "Mode: Cardinal", "Traits: disciplined, ambitious, reliable"],
+        summary: "Capricorn is the builder sign. It respects time, mastery, accountability, and results that hold their shape.",
+        extra: "Typical Capricorn energy is composed, strategic, dryly funny, and very good at carrying responsibility.",
+        moonFocus: "When the moon moves through Capricorn, the emotional tone becomes more measured, practical, and goal-aware.",
+        notable: "Examples: Michelle Obama, Isaac Newton, Martin Luther King Jr."
+      },
+      {
+        range: "January 20 - February 18",
+        facts: ["Element: Air", "Mode: Fixed", "Traits: independent, inventive, future-minded"],
+        summary: "Aquarius is the visionary sign. It is interested in systems, ideas, originality, and what comes next.",
+        extra: "Typical Aquarius energy is unconventional, humane, cerebral, and slightly detached in order to see the bigger pattern.",
+        moonFocus: "When the moon moves through Aquarius, the day favors fresh thinking, distance, objectivity, and unusual connections.",
+        notable: "Examples: Oprah Winfrey, Charles Darwin, Abraham Lincoln."
+      },
+      {
+        range: "February 19 - March 20",
+        facts: ["Element: Water", "Mode: Mutable", "Traits: imaginative, compassionate, intuitive"],
+        summary: "Pisces is the dream and empathy sign. It is tuned to feeling, symbolism, imagination, and what cannot be measured cleanly.",
+        extra: "Typical Pisces energy is tender, creative, absorbent, and often more affected by atmosphere than it first appears.",
+        moonFocus: "When the moon moves through Pisces, intuition, softness, creativity, and emotional permeability all increase.",
+        notable: "Examples: Rihanna, Albert Einstein, Ruth Bader Ginsburg."
+      }
+    ],
+    chinese: [
+      {
+        cycle: "Repeats every 12 years",
+        facts: ["Tone: quick, strategic, adaptable", "Strength: finding openings", "Shadow: overthinking or scheming"],
+        summary: "Rat years are associated with alertness, intelligence, and knowing how to move early when an opportunity appears.",
+        extra: "People linked with Rat energy are often resourceful, socially observant, and surprisingly effective under pressure.",
+        notable: "Examples: Scarlett Johansson, Mark Zuckerberg, Prince Harry."
+      },
+      {
+        cycle: "Repeats every 12 years",
+        facts: ["Tone: steady, patient, dependable", "Strength: endurance", "Shadow: rigidity or slowness to pivot"],
+        summary: "Ox energy is about strength through consistency. It prefers substance over flash and effort over noise.",
+        extra: "People linked with Ox energy often come across as calm, disciplined, stubborn, and quietly formidable.",
+        notable: "Examples: Barack Obama, Vincent van Gogh, Margaret Thatcher."
+      },
+      {
+        cycle: "Repeats every 12 years",
+        facts: ["Tone: bold, instinctive, magnetic", "Strength: courage", "Shadow: impulsiveness or pride"],
+        summary: "Tiger years are associated with risk, charisma, and a strong personal presence that dislikes being boxed in.",
+        extra: "People linked with Tiger energy are often brave, dramatic, protective, and energized by challenge.",
+        notable: "Examples: Queen Elizabeth II, Lady Gaga, Leonardo DiCaprio."
+      },
+      {
+        cycle: "Repeats every 12 years",
+        facts: ["Tone: graceful, diplomatic, intuitive", "Strength: reading the room", "Shadow: avoidance of conflict"],
+        summary: "Rabbit energy is gentle on the surface but sharp underneath. It values peace, taste, and emotional intelligence.",
+        extra: "People linked with Rabbit energy are often tactful, artistic, soothing, and sensitive to atmosphere.",
+        notable: "Examples: Albert Einstein, Angelina Jolie, David Beckham."
+      },
+      {
+        cycle: "Repeats every 12 years",
+        facts: ["Tone: charismatic, ambitious, vivid", "Strength: commanding attention", "Shadow: intensity or excess"],
+        summary: "Dragon years are traditionally seen as powerful, lucky, and larger than life. This is the mythic sign of force and presence.",
+        extra: "People linked with Dragon energy are often confident, dynamic, dramatic, and hard to ignore.",
+        notable: "Examples: Bruce Lee, Rihanna, Salvador Dali."
+      },
+      {
+        cycle: "Repeats every 12 years",
+        facts: ["Tone: analytical, enigmatic, elegant", "Strength: strategy", "Shadow: secrecy or suspicion"],
+        summary: "Snake energy is thoughtful, self-contained, and excellent at reading motives beneath the surface.",
+        extra: "People linked with Snake energy are often perceptive, stylish, private, and very deliberate about their moves.",
+        notable: "Examples: J.K. Rowling, Taylor Swift, Bob Dylan."
+      },
+      {
+        cycle: "Repeats every 12 years",
+        facts: ["Tone: spirited, freedom-loving, lively", "Strength: momentum", "Shadow: impatience or restlessness"],
+        summary: "Horse years are associated with independence, movement, and a dislike of anything that feels confining.",
+        extra: "People linked with Horse energy are often expressive, sociable, capable, and at their best when they can move freely.",
+        notable: "Examples: Nelson Mandela, Paul McCartney, Aretha Franklin."
+      },
+      {
+        cycle: "Repeats every 12 years",
+        facts: ["Tone: gentle, artistic, compassionate", "Strength: emotional sensitivity", "Shadow: hesitation or worry"],
+        summary: "Goat energy is soft, imaginative, and often more resilient than it first appears. It values beauty and emotional warmth.",
+        extra: "People linked with Goat energy are often caring, creative, refined, and highly affected by environment.",
+        notable: "Examples: Steve Jobs, Julia Roberts, Mark Twain."
+      },
+      {
+        cycle: "Repeats every 12 years",
+        facts: ["Tone: clever, inventive, playful", "Strength: improvisation", "Shadow: trickiness or inconsistency"],
+        summary: "Monkey years are associated with intelligence, curiosity, and a strong instinct for hacking the system creatively.",
+        extra: "People linked with Monkey energy are often witty, adaptable, restless, and unusually good at solving problems on the fly.",
+        notable: "Examples: Tom Hanks, Celine Dion, Elizabeth Taylor."
+      },
+      {
+        cycle: "Repeats every 12 years",
+        facts: ["Tone: sharp, precise, self-possessed", "Strength: standards", "Shadow: criticism or perfectionism"],
+        summary: "Rooster energy values clarity, polish, and saying the thing directly instead of pretending everything is fine.",
+        extra: "People linked with Rooster energy are often articulate, stylish, disciplined, and very aware of presentation.",
+        notable: "Examples: Beyonce, Roger Federer, Jennifer Aniston."
+      },
+      {
+        cycle: "Repeats every 12 years",
+        facts: ["Tone: loyal, honest, protective", "Strength: trustworthiness", "Shadow: defensiveness or worry"],
+        summary: "Dog years are associated with integrity, duty, and strong instincts about who or what deserves protection.",
+        extra: "People linked with Dog energy are often dependable, sincere, service-minded, and slow to abandon the people they love.",
+        notable: "Examples: Winston Churchill, Madonna, Mother Teresa."
+      },
+      {
+        cycle: "Repeats every 12 years",
+        facts: ["Tone: generous, warm, comfort-loving", "Strength: abundance mindset", "Shadow: indulgence or naivety"],
+        summary: "Pig energy is open-hearted, sociable, and often connected with pleasure, generosity, and enjoying life fully.",
+        extra: "People linked with Pig energy are often kind, candid, optimistic, and more resilient than their softness suggests.",
+        notable: "Examples: Stephen King, Alfred Hitchcock, Hillary Clinton."
+      }
+    ],
+    phases: [
+      {
+        subtitle: "The reset point of the lunar cycle",
+        facts: ["Window: start of the cycle", "Theme: beginnings, intention, blank space"],
+        summary: "The new moon is the dark moon. It is the quietest phase, often associated with seeds, resets, and private starts.",
+        extra: "This phase is less about public results and more about setting direction before anything is fully visible."
+      },
+      {
+        subtitle: "The first slim crescent after the new moon",
+        facts: ["Window: early growth", "Theme: momentum, courage, first moves"],
+        summary: "Waxing Crescent is the part of the cycle where intention begins turning into action. It is small, visible, and still building.",
+        extra: "This phase usually carries trial energy: start, test, adjust, continue."
+      },
+      {
+        subtitle: "Half-lit moon, roughly one week in",
+        facts: ["Window: first major checkpoint", "Theme: action, friction, decision"],
+        summary: "First Quarter energy is about commitment. The moon is gaining light, but effort and course correction matter here.",
+        extra: "This phase often feels decisive because you can no longer stay only in planning mode."
+      },
+      {
+        subtitle: "Almost full, still building",
+        facts: ["Window: pre-peak", "Theme: refinement, preparation, momentum"],
+        summary: "Waxing Gibbous energy is growth with pressure. Things are filling out, and attention shifts toward improvement and timing.",
+        extra: "This phase often asks for patience, edits, and one more round of effort before the reveal."
+      },
+      {
+        subtitle: "The brightest, most visible phase",
+        facts: ["Window: midpoint peak", "Theme: culmination, clarity, emotional volume"],
+        summary: "Full Moon energy is the peak of the cycle. What was building becomes visible, loud, or impossible to ignore.",
+        extra: "This phase is often linked with heightened feeling, illumination, endings, and public realization."
+      },
+      {
+        subtitle: "Just after the full moon",
+        facts: ["Window: early release", "Theme: reflection, sharing, gratitude"],
+        summary: "Waning Gibbous carries the energy of processing what just reached fullness. It is less about pushing and more about understanding.",
+        extra: "This phase often supports teaching, integrating, and deciding what was worth the effort."
+      },
+      {
+        subtitle: "Half-lit again, now decreasing",
+        facts: ["Window: last major checkpoint", "Theme: release, editing, rebalancing"],
+        summary: "Last Quarter energy is the cleanup phase. It asks what still belongs, what should be cut, and what needs reframing.",
+        extra: "This phase is good for endings, repairs, and shedding weight before the next cycle begins."
+      },
+      {
+        subtitle: "The final thin crescent before the next new moon",
+        facts: ["Window: last few days of the cycle", "Theme: rest, surrender, closure"],
+        summary: "Waning Crescent is the closing exhale of the lunar month. If you meant 'waning crescent,' this is the delicate sliver right before reset.",
+        extra: "This phase is usually associated with stillness, sleep, intuition, forgiveness, and letting the cycle end on purpose."
+      }
+    ],
+    planetDays: [
+      {
+        title: "Sunday",
+        facts: ["Ruler: Sun", "Focus: vitality, confidence, visibility"],
+        summary: "Sunday is traditionally ruled by the Sun, so it is linked with identity, energy, expression, and being seen.",
+        extra: "It is a good symbolic day for warmth, leadership, creativity, and resetting your sense of purpose."
+      },
+      {
+        title: "Monday",
+        facts: ["Ruler: Moon", "Focus: emotion, instinct, care"],
+        summary: "Monday belongs to the Moon. It tends to carry a softer, more internal atmosphere tied to mood, memory, and home.",
+        extra: "It is a good symbolic day for rest, reflection, nurturing, and noticing how you actually feel."
+      },
+      {
+        title: "Tuesday",
+        facts: ["Ruler: Mars", "Focus: action, force, courage"],
+        summary: "Tuesday is associated with Mars, so it tends to emphasize momentum, assertion, competition, and getting things moving.",
+        extra: "It is a good symbolic day for difficult tasks, direct conversations, and disciplined effort."
+      },
+      {
+        title: "Wednesday",
+        facts: ["Ruler: Mercury", "Focus: communication, trade, mental speed"],
+        summary: "Wednesday belongs to Mercury. It is traditionally linked with language, messages, logistics, learning, and quick decisions.",
+        extra: "It is a good symbolic day for meetings, writing, planning, networking, and problem-solving."
+      },
+      {
+        title: "Thursday",
+        facts: ["Ruler: Jupiter", "Focus: growth, opportunity, wisdom"],
+        summary: "Thursday is associated with Jupiter, which brings themes of expansion, confidence, abundance, and belief.",
+        extra: "It is a good symbolic day for bigger plans, generous thinking, teaching, and taking a well-judged leap."
+      },
+      {
+        title: "Friday",
+        facts: ["Ruler: Venus", "Focus: pleasure, connection, beauty"],
+        summary: "Friday belongs to Venus, so it carries themes of affection, art, harmony, desire, and what feels worth savoring.",
+        extra: "It is a good symbolic day for relationships, aesthetics, dating, hospitality, and enjoying what you have."
+      },
+      {
+        title: "Saturday",
+        facts: ["Ruler: Saturn", "Focus: discipline, structure, responsibility"],
+        summary: "Saturday is traditionally ruled by Saturn. It tends to emphasize boundaries, realism, endurance, and long-term work.",
+        extra: "It is a good symbolic day for commitments, repair, systems, and anything that benefits from patience."
+      }
+    ],
+    aspects: {
+      conjunction: {
+        name: "Conjunction",
+        facts: ["Angle: 0°", "Tone: amplified and concentrated"],
+        summary: "A conjunction means the current moon sign is sitting on top of your natal sign energy. The feeling is direct, loud, and personal."
+      },
+      trine: {
+        name: "Trine",
+        facts: ["Angle: 120°", "Tone: smooth flow and support"],
+        summary: "A trine is one of the easier aspects. It suggests the current emotional weather is working with your natural style instead of against it."
+      },
+      sextile: {
+        name: "Sextile",
+        facts: ["Angle: 60°", "Tone: helpful opening and cooperation"],
+        summary: "A sextile is supportive but lighter than a trine. It usually points to opportunities that reward participation."
+      },
+      square: {
+        name: "Square",
+        facts: ["Angle: 90°", "Tone: friction, effort, growth through pressure"],
+        summary: "A square creates tension. It is not automatically bad, but it often means the day asks for adjustment, patience, and better choices."
+      },
+      opposition: {
+        name: "Opposition",
+        facts: ["Angle: 180°", "Tone: contrast, awareness, balancing polarities"],
+        summary: "An opposition can feel like being pulled in two directions. It often reveals what needs balancing between your instincts and the current mood."
+      },
+      neutral: {
+        name: "Neutral",
+        facts: ["Angle: no major aspect", "Tone: low drama, light influence"],
+        summary: "No major aspect means the moon is not strongly pushing or resisting your natal sign today. The influence is present but softer."
+      }
+    }
+  },
+  zh: {
+    labels: {
+      western: "西方星座",
+      chinese: "中国生肖",
+      phase: "月相",
+      moonSign: "月入星座",
+      planet: "行星日",
+      astro: "星象说明",
+      section: "今日解读",
+      oracle: "今日神谕",
+      suggestion: "宇宙建议"
+    },
+    western: [
+      {
+        range: "3月21日 - 4月19日",
+        facts: ["元素：火", "模式：基本宫", "气质：大胆、直接、先行动"],
+        summary: "白羊座是黄道里的点火器，喜欢速度、挑战，以及第一个冲进门的感觉。",
+        extra: "典型白羊能量勇敢、急、好胜，也常带着一种很直接的真诚。",
+        moonFocus: "当月亮落在白羊，整天会更像加速模式，行动感和反应速度都会变强。",
+        notable: "代表人物：Lady Gaga、Maya Angelou、Thomas Jefferson。"
+      },
+      {
+        range: "4月20日 - 5月20日",
+        facts: ["元素：土", "模式：固定宫", "气质：稳定、感官型、忠诚"],
+        summary: "金牛座是稳定器，重视舒适、可靠、审美，以及能真正长期留下来的东西。",
+        extra: "典型金牛能量踏实、耐心、固执，也很懂身体与现实世界的节奏。",
+        moonFocus: "当月亮落在金牛，人会更想要安稳、好吃的、确定感，以及少一点混乱。",
+        notable: "代表人物：Adele、David Attenborough、Queen Elizabeth II。"
+      },
+      {
+        range: "5月21日 - 6月20日",
+        facts: ["元素：风", "模式：变动宫", "气质：好奇、机灵、灵活"],
+        summary: "双子座是信使，擅长信息、交流、变化，以及脑子转得很快的场域。",
+        extra: "典型双子能量明快、社交、停不下来，也非常会捕捉模式与可能性。",
+        moonFocus: "当月亮落在双子，情绪气候会更轻快、健谈、移动感更强。",
+        notable: "代表人物：Angelina Jolie、Prince、John F. Kennedy。"
+      },
+      {
+        range: "6月21日 - 7月22日",
+        facts: ["元素：水", "模式：基本宫", "气质：保护欲、直觉、忠诚"],
+        summary: "巨蟹座是照顾者，和家庭、记忆、归属感、情绪安全以及本能反应关系很深。",
+        extra: "典型巨蟹能量外柔内强，十分敏感，也很会察觉别人没说出口的情绪。",
+        moonFocus: "当月亮落在巨蟹，家、亲密感、情绪波动与自我保护都会被放大。",
+        notable: "代表人物：Princess Diana、Frida Kahlo、Nelson Mandela。"
+      },
+      {
+        range: "7月23日 - 8月22日",
+        facts: ["元素：火", "模式：固定宫", "气质：耀眼、自信、慷慨"],
+        summary: "狮子座是太阳式的可见性，渴望生命有热度、有创造力，而且活得有存在感。",
+        extra: "典型狮子能量表达力强、温暖、有自尊，也天然和勇气与领导力挂钩。",
+        moonFocus: "当月亮落在狮子，人会更想被看见、被回应，也更容易有戏剧感与创造冲动。",
+        notable: "代表人物：Barack Obama、Madonna、Neil Armstrong。"
+      },
+      {
+        range: "8月23日 - 9月22日",
+        facts: ["元素：土", "模式：变动宫", "气质：细致、理性、实用"],
+        summary: "处女座擅长修整与优化，喜欢让系统运转顺畅，而不是让场面看起来热闹。",
+        extra: "典型处女能量敏锐、愿意帮忙、判断力强，也容易看见哪里还不够完善。",
+        moonFocus: "当月亮落在处女，整天会更偏向整理、修正、实事求是地处理问题。",
+        notable: "代表人物：Beyonce、Keanu Reeves、Mother Teresa。"
+      },
+      {
+        range: "9月23日 - 10月22日",
+        facts: ["元素：风", "模式：基本宫", "气质：圆融、优雅、讲平衡"],
+        summary: "天秤座是关系感很强的星座，关注公平、比例、气氛，以及人与人之间的和谐。",
+        extra: "典型天秤能量迷人、讲策略、有理想，也很想把整个房间的氛围调到更顺。",
+        moonFocus: "当月亮落在天秤，关系、美感、协商与社交感受会变得更重要。",
+        notable: "代表人物：Serena Williams、Mahatma Gandhi、Oscar Wilde。"
+      },
+      {
+        range: "10月23日 - 11月21日",
+        facts: ["元素：水", "模式：固定宫", "气质：深刻、敏锐、忠诚"],
+        summary: "天蝎座是深度星座，关心真相、力量、转化，以及人们通常藏起来的部分。",
+        extra: "典型天蝎能量有磁性、内敛、投入，也很难被表面东西真正骗过去。",
+        moonFocus: "当月亮落在天蝎，情绪会变浓，人与人之间会更渴望真实而不是礼貌表层。",
+        notable: "代表人物：Marie Curie、Leonardo DiCaprio、Indira Gandhi。"
+      },
+      {
+        range: "11月22日 - 12月21日",
+        facts: ["元素：火", "模式：变动宫", "气质：冒险、坦率、扩张"],
+        summary: "射手座是地平线感很强的星座，想要自由、意义、远方，以及更大的图景。",
+        extra: "典型射手能量乐观、直白、好笑，也总在寻找下一条路或下一条答案。",
+        moonFocus: "当月亮落在射手，整天会更想往外走、说真话、玩一点，也更朝未来看。",
+        notable: "代表人物：Jane Austen、Winston Churchill、Taylor Swift。"
+      },
+      {
+        range: "12月22日 - 1月19日",
+        facts: ["元素：土", "模式：基本宫", "气质：克制、上进、可靠"],
+        summary: "摩羯座是建造者，尊重时间、结构、责任，以及能经得起检验的结果。",
+        extra: "典型摩羯能量稳、冷静、有策略，也常常默默扛住很多责任。",
+        moonFocus: "当月亮落在摩羯，情绪气候会更克制、更务实，也更在乎长期目标。",
+        notable: "代表人物：Michelle Obama、Isaac Newton、Martin Luther King Jr。"
+      },
+      {
+        range: "1月20日 - 2月18日",
+        facts: ["元素：风", "模式：固定宫", "气质：独立、创新、未来导向"],
+        summary: "水瓶座是前瞻者，关注系统、理念、原创性，以及还没到来的未来。",
+        extra: "典型水瓶能量不走寻常路、有人道感、偏理智，也会保持一点观察距离。",
+        moonFocus: "当月亮落在水瓶，整天更利于新想法、客观思考和不寻常的连接方式。",
+        notable: "代表人物：Oprah Winfrey、Charles Darwin、Abraham Lincoln。"
+      },
+      {
+        range: "2月19日 - 3月20日",
+        facts: ["元素：水", "模式：变动宫", "气质：想象力、同理心、直觉"],
+        summary: "双鱼座和梦、共情、象征以及无法被精确测量的东西关系很深。",
+        extra: "典型双鱼能量温柔、艺术感强、吸收性高，也比表面看起来更受环境影响。",
+        moonFocus: "当月亮落在双鱼，直觉、柔软、创作欲和情绪渗透感都会上升。",
+        notable: "代表人物：Rihanna、Albert Einstein、Ruth Bader Ginsburg。"
+      }
+    ],
+    chinese: [
+      {
+        cycle: "每12年轮回一次",
+        facts: ["气质：机敏、会观察、适应力强", "优势：擅长找机会", "阴影：容易多想或过度算计"],
+        summary: "鼠年常被视为灵活聪明、很会提早察觉机会的一类能量。",
+        extra: "带有鼠能量的人通常反应快、观察力强、社交敏锐，也很会在压力下找路。",
+        notable: "代表人物：Scarlett Johansson、Mark Zuckerberg、Prince Harry。"
+      },
+      {
+        cycle: "每12年轮回一次",
+        facts: ["气质：稳、耐心、可信赖", "优势：耐力", "阴影：不易转弯或过慢"],
+        summary: "牛的能量强调靠稳定取胜，重视实干与长期积累，不爱虚张声势。",
+        extra: "带有牛能量的人通常冷静、能扛、固执，而且很难被轻易撼动。",
+        notable: "代表人物：Barack Obama、Vincent van Gogh、Margaret Thatcher。"
+      },
+      {
+        cycle: "每12年轮回一次",
+        facts: ["气质：大胆、凭本能、有气场", "优势：勇气", "阴影：冲动或自尊过强"],
+        summary: "虎年代表魄力、存在感与冒险精神，不太喜欢被框住。",
+        extra: "带有虎能量的人通常勇、护短、有戏剧性，也会被挑战激发。",
+        notable: "代表人物：Queen Elizabeth II、Lady Gaga、Leonardo DiCaprio。"
+      },
+      {
+        cycle: "每12年轮回一次",
+        facts: ["气质：温和、圆融、直觉型", "优势：会看气氛", "阴影：回避冲突"],
+        summary: "兔的能量表面柔和，底层却很聪明，重视和平、审美和情绪智慧。",
+        extra: "带有兔能量的人通常有分寸、艺术感强、让人舒服，也很受环境影响。",
+        notable: "代表人物：Albert Einstein、Angelina Jolie、David Beckham。"
+      },
+      {
+        cycle: "每12年轮回一次",
+        facts: ["气质：有魅力、进取、存在感强", "优势：号召力", "阴影：用力过猛或强度太高"],
+        summary: "龙在传统里常被看作强势、幸运、气场大的象征，是很有传奇感的生肖。",
+        extra: "带有龙能量的人通常自信、动态感强、难以被忽视。",
+        notable: "代表人物：Bruce Lee、Rihanna、Salvador Dali。"
+      },
+      {
+        cycle: "每12年轮回一次",
+        facts: ["气质：分析型、神秘、讲究", "优势：谋略", "阴影：过度保留或多疑"],
+        summary: "蛇的能量偏安静、会观察，也很擅长看见动机和表象背后的东西。",
+        extra: "带有蛇能量的人通常敏锐、优雅、低调，而且每一步都很有意图。",
+        notable: "代表人物：J.K. Rowling、Taylor Swift、Bob Dylan。"
+      },
+      {
+        cycle: "每12年轮回一次",
+        facts: ["气质：有精神、爱自由、活力强", "优势：行动力", "阴影：急躁或坐不住"],
+        summary: "马的能量与自由、速度和不愿受限有关，喜欢可以流动的生活。",
+        extra: "带有马能量的人通常外向、能干、能带动气氛，最好是在可以自由发挥的时候。",
+        notable: "代表人物：Nelson Mandela、Paul McCartney、Aretha Franklin。"
+      },
+      {
+        cycle: "每12年轮回一次",
+        facts: ["气质：温柔、艺术感、富同理心", "优势：情绪细腻", "阴影：犹豫或容易担心"],
+        summary: "羊的能量柔软、有想象力，也常常比看起来更有韧性，重视美感与温度。",
+        extra: "带有羊能量的人通常会照顾气氛、很有创作性，也很需要环境舒服。",
+        notable: "代表人物：Steve Jobs、Julia Roberts、Mark Twain。"
+      },
+      {
+        cycle: "每12年轮回一次",
+        facts: ["气质：聪明、灵活、好玩", "优势：现场应变", "阴影：太跳或不够稳定"],
+        summary: "猴的能量和机智、好奇、系统破解能力很有关，喜欢用聪明方法解决问题。",
+        extra: "带有猴能量的人通常幽默、反应快、点子多，也不太能长期忍受无聊。",
+        notable: "代表人物：Tom Hanks、Celine Dion、Elizabeth Taylor。"
+      },
+      {
+        cycle: "每12年轮回一次",
+        facts: ["气质：利落、讲标准、有自我要求", "优势：清晰度", "阴影：挑剔或完美主义"],
+        summary: "鸡的能量重视表达准确、外在体面与把事情说清楚，不喜欢含糊。",
+        extra: "带有鸡能量的人通常有条理、会呈现自己，也很清楚什么叫像样。",
+        notable: "代表人物：Beyonce、Roger Federer、Jennifer Aniston。"
+      },
+      {
+        cycle: "每12年轮回一次",
+        facts: ["气质：忠诚、诚实、保护欲", "优势：可信度", "阴影：防御心或担忧感"],
+        summary: "狗的能量和正直、责任感以及保护值得守护的人或事高度相关。",
+        extra: "带有狗能量的人通常靠谱、真诚、有服务意识，也不容易随便放弃自己在乎的人。",
+        notable: "代表人物：Winston Churchill、Madonna、Mother Teresa。"
+      },
+      {
+        cycle: "每12年轮回一次",
+        facts: ["气质：慷慨、温暖、懂得享受", "优势：丰盛感", "阴影：过度放纵或太容易相信"],
+        summary: "猪的能量直率、热情，也和享受生活、愿意分享以及开阔的心有关。",
+        extra: "带有猪能量的人通常友善、真诚、乐观，而且比外表看起来更能扛事。",
+        notable: "代表人物：Stephen King、Alfred Hitchcock、Hillary Clinton。"
+      }
+    ],
+    phases: [
+      {
+        subtitle: "月亮周期的重置点",
+        facts: ["时段：周期起点", "主题：开始、意图、空白"],
+        summary: "新月是最暗的月亮，常被拿来象征播种、重启和安静开始的阶段。",
+        extra: "这个阶段更像是定方向，而不是马上看到结果。"
+      },
+      {
+        subtitle: "新月之后最初那弯细细的月亮",
+        facts: ["时段：早期增长", "主题：启动、勇气、第一步"],
+        summary: "眉月是意图开始变成行动的阶段，虽然还小，但已经可见，而且正在累积。",
+        extra: "这一段通常带着试探、开始、调整、继续的味道。"
+      },
+      {
+        subtitle: "大约一周时出现的半月",
+        facts: ["时段：第一个关口", "主题：行动、阻力、决定"],
+        summary: "上弦月强调承诺。光正在增加，但你已经不能只停留在计划里。",
+        extra: "这个阶段常常让人感觉必须真正做决定。"
+      },
+      {
+        subtitle: "快满了，但还在继续增长",
+        facts: ["时段：接近高点", "主题：打磨、准备、蓄势"],
+        summary: "盈凸月是增长伴随着压力的阶段，事情变得更完整，也更需要修整。",
+        extra: "它常常要求耐心、修订，以及再多做一点才会到位。"
+      },
+      {
+        subtitle: "最亮、最显眼的阶段",
+        facts: ["时段：周期高峰", "主题：结果、显化、情绪放大"],
+        summary: "满月是整个周期的峰值，之前累积的东西会变得清楚、明显，或者无法忽视。",
+        extra: "它常和情绪高涨、看见真相、结束某件事联系在一起。"
+      },
+      {
+        subtitle: "满月之后刚开始往回收的时候",
+        facts: ["时段：开始释放", "主题：回看、分享、消化"],
+        summary: "亏凸月的能量更像是在理解刚刚到达顶点的东西，而不是继续硬推。",
+        extra: "这个阶段适合总结、分享经验、判断哪些努力真的值得。"
+      },
+      {
+        subtitle: "再次半月，但光在减少",
+        facts: ["时段：最后一个关口", "主题：删减、修补、再平衡"],
+        summary: "下弦月是收尾与修整阶段，会问你什么该留下，什么该剪掉。",
+        extra: "这个阶段适合结尾、修复、放下不再需要的部分。"
+      },
+      {
+        subtitle: "下一次新月前最后一弯细月",
+        facts: ["时段：周期最后几天", "主题：休息、放手、结束"],
+        summary: "残月是整个月相周期的最后一口气。如果你说的是 waning crescent，大致就是这轮细细的收尾月亮。",
+        extra: "它常和安静、睡眠、直觉、原谅以及有意识地结束这个周期有关。"
+      }
+    ],
+    planetDays: [
+      {
+        title: "星期日 / 太阳日",
+        facts: ["主星：太阳", "主题：生命力、自信、可见度"],
+        summary: "星期日传统上由太阳主导，所以常和身份感、活力、表达与被看见有关。",
+        extra: "它象征适合创造、领导、恢复热度，以及重新对准自己的中心。"
+      },
+      {
+        title: "星期一 / 月亮日",
+        facts: ["主星：月亮", "主题：情绪、本能、照料"],
+        summary: "星期一属于月亮，气氛通常更内在，也更接近情绪、记忆与家的感觉。",
+        extra: "它象征适合休息、感受、整理内心，以及照顾自己或别人。"
+      },
+      {
+        title: "星期二 / 火星日",
+        facts: ["主星：火星", "主题：行动、力量、勇气"],
+        summary: "星期二和火星相关，强调推进、直接、竞争，以及把事情真正推起来。",
+        extra: "它象征适合处理难题、说清楚、以及带着纪律去执行。"
+      },
+      {
+        title: "星期三 / 水星日",
+        facts: ["主星：水星", "主题：沟通、信息、思维速度"],
+        summary: "星期三属于水星，传统上和语言、消息、学习、规划、协作很有关系。",
+        extra: "它象征适合写作、开会、谈判、整理资讯与解决问题。"
+      },
+      {
+        title: "星期四 / 木星日",
+        facts: ["主星：木星", "主题：扩张、机会、智慧"],
+        summary: "星期四与木星有关，常带来增长、信心、丰盛感以及更大的视角。",
+        extra: "它象征适合做大计划、教学、慷慨思考，以及判断后的跃进。"
+      },
+      {
+        title: "星期五 / 金星日",
+        facts: ["主星：金星", "主题：关系、愉悦、审美"],
+        summary: "星期五属于金星，所以常和爱、美、享受、关系与值得品味的东西有关。",
+        extra: "它象征适合约会、修复关系、布置空间，以及享受已经拥有的部分。"
+      },
+      {
+        title: "星期六 / 土星日",
+        facts: ["主星：土星", "主题：纪律、结构、责任"],
+        summary: "星期六传统上由土星主导，会更强调边界、现实、耐力与长期建设。",
+        extra: "它象征适合维护系统、履行承诺、修补漏洞，以及做慢但重要的事。"
+      }
+    ],
+    aspects: {
+      conjunction: {
+        name: "合相",
+        facts: ["角度：0°", "气质：放大、集中"],
+        summary: "合相表示今天的月亮能量和你的本命星座几乎贴在一起，感受会更直接，也更像在照到自己。"
+      },
+      trine: {
+        name: "三分相",
+        facts: ["角度：120°", "气质：顺流、支持"],
+        summary: "三分相通常比较顺，表示今天的情绪气候和你的天生节奏彼此配合。"
+      },
+      sextile: {
+        name: "六分相",
+        facts: ["角度：60°", "气质：帮忙、给机会"],
+        summary: "六分相比三分相轻一点，但仍偏支持，往往意味着机会在那，只要你愿意伸手。"
+      },
+      square: {
+        name: "四分相",
+        facts: ["角度：90°", "气质：摩擦、压力下成长"],
+        summary: "四分相会制造张力，不一定是坏事，但常常意味着今天需要调整、耐心和更好的选择。"
+      },
+      opposition: {
+        name: "对冲",
+        facts: ["角度：180°", "气质：拉扯、照见两端"],
+        summary: "对冲常像被两股力拉住，它会让你更意识到自己本能与当天气氛之间需要平衡的地方。"
+      },
+      neutral: {
+        name: "无强相位",
+        facts: ["角度：没有主要相位", "气质：影响较轻、整体平缓"],
+        summary: "没有主要相位表示月亮今天没有强烈推着你，也没有明显跟你对着干，影响存在但较柔和。"
+      }
+    }
+  }
+};
+
 // ═══════════════════════════════════════════════════════════════
 //  SHARED EMOJI ARRAYS
 // ═══════════════════════════════════════════════════════════════
@@ -1448,6 +2213,20 @@ function dots(n){
 
 function $ (id){return document.getElementById(id)}
 function tx(id,v){$(id).textContent=v}
+function setBlockText(id,v){
+  const el=$(id);
+  el.textContent=v||'';
+  el.style.display=v?'':'none';
+}
+function escapeHtml(v){
+  return String(v)
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;')
+    .replace(/'/g,'&#39;');
+}
+function isActionKey(e){return e.key==='Enter'||e.key===' '}
 
 // ═══════════════════════════════════════════════════════════════
 //  THEME
@@ -1474,8 +2253,10 @@ function toggleTheme(){
 //  APP STATE
 // ═══════════════════════════════════════════════════════════════
 let lang = localStorage.getItem('cosmic_lang') || 'en';
+let readingState=null;
 
 function toggleLang(){
+  closeDetail();
   lang = lang==='en'?'zh':'en';
   localStorage.setItem('cosmic_lang',lang);
   const bday=localStorage.getItem('cosmic_bday');
@@ -1495,10 +2276,12 @@ function applyStaticLang(){
   if($('oracle-lbl'))tx('oracle-lbl',L.oracleLbl);
   if($('sug-lbl')) tx('sug-lbl',   L.sugLbl);
   if($('btn-reset'))tx('btn-reset', L.changeBtn);
+  if($('detail-close'))$('detail-close').setAttribute('aria-label',L.detailClose);
   document.documentElement.lang = lang==='zh'?'zh-Hans':'en';
 }
 
 function show(id){
+  if(id!=='reading')closeDetail();
   ['onboarding','reading'].forEach(s=>$(s).classList.add('hidden'));
   $(id).classList.remove('hidden');
 }
@@ -1518,9 +2301,204 @@ function startReading(){
 function resetBday(){
   const L=LANG[lang];
   if(!confirm(L.resetMsg))return;
+  closeDetail();
+  readingState=null;
   localStorage.removeItem('cosmic_bday');
   $('bday-input').value='';
   show('onboarding');
+}
+
+function applyDetail(payload){
+  setBlockText('detail-kicker',payload.kicker);
+  setBlockText('detail-title',payload.title);
+  setBlockText('detail-sub',payload.subtitle);
+
+  const facts=payload.facts||[];
+  $('detail-facts').innerHTML=facts.map(f=>`<span class="detail-pill">${escapeHtml(f)}</span>`).join('');
+  $('detail-facts').style.display=facts.length?'flex':'none';
+
+  const copy=$('detail-copy');
+  copy.innerHTML='';
+  (payload.paragraphs||[]).filter(Boolean).forEach(text=>{
+    const p=document.createElement('p');
+    p.textContent=text;
+    copy.appendChild(p);
+  });
+}
+
+function openDetail(payload){
+  if(!payload)return;
+  applyDetail(payload);
+  $('detail-modal').classList.add('open');
+  $('detail-modal').setAttribute('aria-hidden','false');
+  document.body.classList.add('modal-open');
+}
+
+function closeDetail(){
+  $('detail-modal').classList.remove('open');
+  $('detail-modal').setAttribute('aria-hidden','true');
+  document.body.classList.remove('modal-open');
+}
+
+function buildWesternDetail(idx){
+  const L=LANG[lang], D=DETAILS[lang];
+  const item=D.western[idx];
+  return{
+    kicker:D.labels.western,
+    title:`${WEST_EMOJI[idx]} ${L.westNames[idx]}`,
+    subtitle:item.range,
+    facts:item.facts,
+    paragraphs:[item.summary,item.extra,item.notable]
+  };
+}
+
+function buildChineseDetail(idx){
+  const L=LANG[lang], D=DETAILS[lang];
+  const item=D.chinese[idx];
+  return{
+    kicker:D.labels.chinese,
+    title:`${CHI_EMOJI[idx]} ${lang==='zh'?L.chiNames[idx]+'年':L.yearOf(L.chiNames[idx])}`,
+    subtitle:lang==='zh'
+      ?`${readingState.birthYear}年出生对应生肖 · ${item.cycle}`
+      :`Birth year ${readingState.birthYear} · ${item.cycle}`,
+    facts:item.facts,
+    paragraphs:[item.summary,item.extra,item.notable]
+  };
+}
+
+function buildMoonPhaseDetail(idx){
+  const L=LANG[lang], D=DETAILS[lang];
+  const item=D.phases[idx];
+  return{
+    kicker:D.labels.phase,
+    title:`${MOON_EMOJI[idx]} ${L.moonNames[idx]}`,
+    subtitle:item.subtitle,
+    facts:item.facts,
+    paragraphs:[item.summary,item.extra]
+  };
+}
+
+function buildMoonSignDetail(idx){
+  const L=LANG[lang], D=DETAILS[lang];
+  const sign=D.western[idx];
+  const aspect=D.aspects[readingState.aspect];
+  return{
+    kicker:D.labels.moonSign,
+    title:`🌙 ${lang==='zh'?'月入':'Moon in'} ${L.zodiacNames[idx]}`,
+    subtitle:lang==='zh'?'今天情绪与本能反应的底色':"Today's emotional weather",
+    facts:[sign.facts[0],sign.facts[2],`${lang==='zh'?'当前相位':'Current aspect'}: ${aspect.name}`],
+    paragraphs:[
+      lang==='zh'
+        ?'月入星座描述的是今天情绪、本能与安全感更容易通过什么方式表达。'
+        :'Moon-in-sign describes how the emotional tone of the day is likely to move.',
+      sign.moonFocus,
+      aspect.summary
+    ]
+  };
+}
+
+function buildPlanetDetail(idx){
+  const D=DETAILS[lang];
+  const item=D.planetDays[idx];
+  return{
+    kicker:D.labels.planet,
+    title:`${PLANET_EMOJI[idx]} ${readingState.planetDayLabel}`,
+    subtitle:item.title,
+    facts:item.facts,
+    paragraphs:[item.summary,item.extra]
+  };
+}
+
+function buildAstroDetail(){
+  const L=LANG[lang], D=DETAILS[lang];
+  const aspect=D.aspects[readingState.aspect];
+  const moonItem=D.western[readingState.moonSignIdx];
+  return{
+    kicker:D.labels.astro,
+    title:readingState.moonInLabel,
+    subtitle:lang==='zh'?'这行是今天评分背后的星象速记':'The short astrological note behind today’s scores',
+    facts:[
+      `${lang==='zh'?'相位':'Aspect'}: ${aspect.name}`,
+      `${lang==='zh'?'月入':'Moon in'} ${L.zodiacNames[readingState.moonSignIdx]}`
+    ],
+    paragraphs:[
+      aspect.summary,
+      moonItem.moonFocus,
+      lang==='zh'
+        ?'它不会改写原文，但会解释今天整体情绪底色为什么更偏向这个方向。'
+        :'It does not rewrite the messages, but it does explain the emotional tilt behind today’s reading.'
+    ]
+  };
+}
+
+function buildCategoryDetail(key){
+  const L=LANG[lang], D=DETAILS[lang];
+  return{
+    kicker:D.labels.section,
+    title:`${CAT_ICONS[CAT_KEYS.indexOf(key)]} ${L[key].name}`,
+    subtitle:lang==='zh'?`今日评分：${L.rLbls[readingState.ratings[key]]}`:`Today’s rating: ${L.rLbls[readingState.ratings[key]]}`,
+    facts:[
+      `${lang==='zh'?'分数':'Score'}: ${readingState.ratings[key]}/5`,
+      L.rLbls[readingState.ratings[key]]
+    ],
+    paragraphs:[readingState.msgs[key]]
+  };
+}
+
+function buildOracleDetail(){
+  const D=DETAILS[lang];
+  return{
+    kicker:D.labels.oracle,
+    title:LANG[lang].oracleLbl,
+    subtitle:lang==='zh'?'放大查看今天的神谕':'Expanded for easier reading',
+    facts:[],
+    paragraphs:[readingState.oracle]
+  };
+}
+
+function buildSuggestionDetail(){
+  const D=DETAILS[lang];
+  return{
+    kicker:D.labels.suggestion,
+    title:LANG[lang].sugLbl,
+    subtitle:lang==='zh'?'放大查看今天的建议':'Expanded for easier reading',
+    facts:[],
+    paragraphs:[readingState.suggest]
+  };
+}
+
+function getDetailPayload(type,key){
+  if(!readingState)return null;
+  switch(type){
+    case 'western': return buildWesternDetail(Number(key));
+    case 'chinese': return buildChineseDetail(Number(key));
+    case 'moon-phase': return buildMoonPhaseDetail(Number(key));
+    case 'moon-sign': return buildMoonSignDetail(Number(key));
+    case 'planet-day': return buildPlanetDetail(Number(key));
+    case 'astro': return buildAstroDetail();
+    case 'category': return buildCategoryDetail(key);
+    case 'oracle': return buildOracleDetail();
+    case 'suggestion': return buildSuggestionDetail();
+    default: return null;
+  }
+}
+
+function activateDetailTrigger(node){
+  const payload=getDetailPayload(node.dataset.detail,node.dataset.key);
+  if(payload)openDetail(payload);
+}
+
+function onReadingClick(e){
+  const trigger=e.target.closest('[data-detail]');
+  if(trigger)activateDetailTrigger(trigger);
+}
+
+function onReadingKeydown(e){
+  const trigger=e.target.closest('[data-detail]');
+  if(trigger && isActionKey(e)){
+    e.preventDefault();
+    activateDetailTrigger(trigger);
+  }
 }
 
 function renderReading(bday){
@@ -1563,6 +2541,18 @@ function renderReading(bday){
     ?`月亮${aspName?aspName+'相·':''}月入${moonSignName}`
     :`Moon${aspName?' '+aspName+' natal ·':''} Moon in ${moonSignName}`;
 
+  readingState={
+    birthYear:bY,
+    ratings,
+    msgs,
+    oracle,
+    suggest,
+    aspect:calc.asp,
+    moonSignIdx:calc.moonSignIdx,
+    moonInLabel,
+    planetDayLabel
+  };
+
   // Header
   const d=today,wday=L.dayNames[d.getDay()];
   const mNum=d.getMonth()+1, mName=L.monthNames[d.getMonth()];
@@ -1570,16 +2560,16 @@ function renderReading(bday){
   tx('r-title', rtitle);
 
   $('r-signs').innerHTML=`
-    <div class="badge">${wsEmoji} ${wsName}</div>
-    <div class="badge">${czEmoji} ${lang==='zh'?czName+'年':L.yearOf(czName)}</div>
-    <div class="badge">${moonEmoji} ${moonName}</div>
-    <div class="badge">🌙 ${lang==='zh'?'月入':'Moon in'} ${moonSignName}</div>
-    <div class="badge">${planetEmoji} ${planetDayLabel}</div>`;
+    <button type="button" class="badge badge-btn" data-detail="western" data-key="${wi}">${wsEmoji} ${wsName}</button>
+    <button type="button" class="badge badge-btn" data-detail="chinese" data-key="${ci}">${czEmoji} ${lang==='zh'?czName+'年':L.yearOf(czName)}</button>
+    <button type="button" class="badge badge-btn" data-detail="moon-phase" data-key="${mi}">${moonEmoji} ${moonName}</button>
+    <button type="button" class="badge badge-btn" data-detail="moon-sign" data-key="${calc.moonSignIdx}">🌙 ${lang==='zh'?'月入':'Moon in'} ${moonSignName}</button>
+    <button type="button" class="badge badge-btn" data-detail="planet-day" data-key="${today.getDay()}">${planetEmoji} ${planetDayLabel}</button>`;
   tx('r-astro', moonInLabel);
 
   // Category cards
   $('cat-grid').innerHTML=CAT_KEYS.map((k,i)=>`
-    <div class="card cat-card fu d${i+1}">
+    <div class="card cat-card interactive-card fu d${i+1}" tabindex="0" role="button" data-detail="category" data-key="${k}">
       <div class="cat-head">
         <span class="cat-icon">${CAT_ICONS[i]}</span>
         <span class="cat-name">${L[k].name}</span>
@@ -1600,6 +2590,14 @@ function renderReading(bday){
 function init(){
   applyTheme(theme);
   applyStaticLang();
+  $('reading').addEventListener('click',onReadingClick);
+  $('reading').addEventListener('keydown',onReadingKeydown);
+  $('detail-modal').addEventListener('click',e=>{
+    if(e.target===$('detail-modal'))closeDetail();
+  });
+  document.addEventListener('keydown',e=>{
+    if(e.key==='Escape' && $('detail-modal').classList.contains('open'))closeDetail();
+  });
   const bday=localStorage.getItem('cosmic_bday');
   if(bday){show('reading');renderReading(bday);}
   else show('onboarding');
