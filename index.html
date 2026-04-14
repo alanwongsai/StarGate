@@ -392,10 +392,10 @@
     .sug-txt {font-size:14px;color:var(--t2);line-height:1.58}
 
     /* ── FOOTER ───────────────────────────────── */
-    .r-footer{width:100%;max-width:430px;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:6px 4px;margin-top:3px}
-    .r-foot-info{font-size:12px;color:var(--t3)}
-    .footer-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+    .r-footer{width:100%;max-width:430px;display:flex;justify-content:space-between;align-items:center;gap:14px;padding:6px 4px;margin-top:3px}
     .btn-reset,.btn-creator{background:none;border:none;font-size:12px;color:var(--t3);cursor:pointer;font-family:inherit;text-decoration:underline;text-underline-offset:2px;padding:4px;transition:color .2s}
+    .btn-creator{text-align:left}
+    .btn-reset{text-align:right}
     .btn-reset:hover,.btn-reset:focus-visible,
     .btn-creator:hover,.btn-creator:focus-visible{color:var(--t2);outline:none}
 
@@ -595,11 +595,8 @@
     </div>
   </div>
   <div class="r-footer fu d7">
-    <span class="r-foot-info" id="r-foot"></span>
-    <div class="footer-actions">
-      <button class="btn-creator" id="btn-creator" type="button" data-detail="creator"></button>
-      <button class="btn-reset" id="btn-reset" onclick="resetBday()"></button>
-    </div>
+    <button class="btn-creator" id="btn-creator" type="button" data-detail="creator"></button>
+    <button class="btn-reset" id="btn-reset" onclick="resetBday()"></button>
   </div>
 </div>
 
@@ -1515,7 +1512,6 @@ function renderReading(bday,targetDate=new Date()){
 
   tx('oracle-txt', oracle);
   tx('sug-txt',    suggest);
-  tx('r-foot', identity);
 }
 
 // ═══════════════════════════════════════════════════════════════
