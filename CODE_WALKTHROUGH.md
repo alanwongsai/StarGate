@@ -9,6 +9,7 @@
 ```text
 index.html
 content.js
+vendor/html2canvas.min.js
 README.md
 manifest.json
 cosmic-daily-icon.png
@@ -30,6 +31,10 @@ cosmic-daily-icon-192.png
 这是内容文件，包含双语界面文案、星座/生肖详情、今日宜忌规则、每日神谕和建议文案池。
 
 把内容从 `index.html` 里拆出来后，后续新增文案、扩展语言或调整规则时，不需要在主页面结构和交互逻辑中来回查找。
+
+### `vendor/html2canvas.min.js`
+
+这是本地保存的截图分享依赖。分享按钮会用它把当前阅读页生成 PNG 图片；文件放在仓库里，所以部署到 GitHub Pages 时不需要访问 CDN。
 
 ### `README.md`
 
@@ -926,7 +931,6 @@ function applyStaticLang() {
 cosmic_theme
 cosmic_lang
 cosmic_bday
-cosmic_history_v1
 ```
 
 含义：
@@ -934,7 +938,6 @@ cosmic_history_v1
 - `cosmic_theme`：用户选择的主题。
 - `cosmic_lang`：用户选择的语言。
 - `cosmic_bday`：用户输入的生日。
-- `cosmic_history_v1`：最近 30 条本地阅读摘要，用于历史记录列表。
 
 ### 11.1 `startReading()`
 
