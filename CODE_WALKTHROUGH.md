@@ -1,6 +1,6 @@
 # Cosmic Daily 项目代码学习笔记
 
-这份笔记面向刚开始学习 coding 的读者。项目本身是一个很适合入门分析的单页网页应用：没有后端、没有构建工具、没有依赖安装，主要代码都在 `index.html` 里。
+这份笔记面向刚开始学习 coding 的读者。项目本身是一个很适合入门分析的单页网页应用：没有后端、没有构建工具、没有依赖安装。主界面和交互逻辑在 `index.html` 里，双语文案和规则内容在 `content.js` 里。
 
 项目作用：用户输入生日后，网页会根据生日和当天日期生成一份每日星象解读，包括西方星座、中国生肖、月相、月入星座、今日宜忌、四类评分、今日神谕和建议。
 
@@ -8,6 +8,7 @@
 
 ```text
 index.html
+content.js
 README.md
 manifest.json
 cosmic-daily-icon.png
@@ -20,9 +21,15 @@ cosmic-daily-icon-192.png
 
 1. HTML：页面结构，比如按钮、输入框、阅读页、弹窗。
 2. CSS：视觉样式，比如深色/浅色主题、毛玻璃卡片、布局、动画。
-3. JavaScript：数据、计算逻辑、状态保存、页面渲染、交互事件。
+3. JavaScript：计算逻辑、状态保存、页面渲染、交互事件。
 
-这个项目刻意把所有主逻辑放在一个文件里，所以打开 `index.html` 就能看到完整应用如何工作。
+这个项目刻意保持无构建工具结构，所以打开 `index.html` 就能看到页面和主逻辑如何工作。
+
+### `content.js`
+
+这是内容文件，包含双语界面文案、星座/生肖详情、今日宜忌规则、每日神谕和建议文案池。
+
+把内容从 `index.html` 里拆出来后，后续新增文案、扩展语言或调整规则时，不需要在主页面结构和交互逻辑中来回查找。
 
 ### `README.md`
 
@@ -919,6 +926,7 @@ function applyStaticLang() {
 cosmic_theme
 cosmic_lang
 cosmic_bday
+cosmic_history_v1
 ```
 
 含义：
@@ -926,6 +934,7 @@ cosmic_bday
 - `cosmic_theme`：用户选择的主题。
 - `cosmic_lang`：用户选择的语言。
 - `cosmic_bday`：用户输入的生日。
+- `cosmic_history_v1`：最近 30 条本地阅读摘要，用于历史记录列表。
 
 ### 11.1 `startReading()`
 
@@ -1113,15 +1122,15 @@ function buildAlmanacAdvice() {
 
 这里的关键思想是“组合规则”，不是“随机抽一句”。
 
-## 14. 主渲染函数：`renderReading(bday)`
+## 14. 主渲染函数：`renderReading(bday, targetDate)`
 
 ```js
-function renderReading(bday) { ... }
+function renderReading(bday, targetDate = new Date()) { ... }
 ```
 
 这是整个应用最核心的函数。
 
-它负责把生日和今天日期变成完整页面。
+它负责把生日和当前查看日期变成完整页面。默认查看今天，也可以由上一天、今天、下一天按钮切换到其他日期。
 
 ### 14.1 准备语言和日期
 
@@ -1129,11 +1138,11 @@ function renderReading(bday) { ... }
 const L = LANG[lang];
 applyStaticLang();
 
-const birth = new Date(bday);
-const today = new Date();
+const birth = parseDateInput(bday);
+const today = localDate(targetDate);
 ```
 
-这里先拿当前语言的文案，再创建生日和今天的日期对象。
+这里先拿当前语言的文案，再创建生日和当前查看日期的日期对象。
 
 ### 14.2 计算星座、生肖、月相
 
@@ -1422,7 +1431,7 @@ init() 启动
         ↓
 startReading() 保存生日
         ↓
-renderReading() 开始生成今日解读
+renderReading() 开始生成当前日期的解读
         ↓
 根据生日计算西方星座和生肖
         ↓
@@ -1460,7 +1469,7 @@ openDetail() 显示弹窗
 7. `renderReading()` 如何把数据变成页面。
 8. 事件委托如何处理动态生成的卡片点击。
 9. 通用弹窗如何复用一套 HTML 显示不同详情。
-10. 单文件应用如何在没有后端的情况下完成完整体验。
+10. 静态网页应用如何在没有后端的情况下完成完整体验。
 
 ## 20. 初学者阅读建议
 
