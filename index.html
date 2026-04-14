@@ -392,10 +392,12 @@
     .sug-txt {font-size:14px;color:var(--t2);line-height:1.58}
 
     /* ── FOOTER ───────────────────────────────── */
-    .r-footer{width:100%;max-width:430px;display:flex;justify-content:space-between;align-items:center;padding:6px 4px;margin-top:3px}
+    .r-footer{width:100%;max-width:430px;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:6px 4px;margin-top:3px}
     .r-foot-info{font-size:12px;color:var(--t3)}
-    .btn-reset{background:none;border:none;font-size:12px;color:var(--t3);cursor:pointer;font-family:inherit;text-decoration:underline;text-underline-offset:2px;padding:4px;transition:color .2s}
-    .btn-reset:hover{color:var(--t2)}
+    .footer-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+    .btn-reset,.btn-creator{background:none;border:none;font-size:12px;color:var(--t3);cursor:pointer;font-family:inherit;text-decoration:underline;text-underline-offset:2px;padding:4px;transition:color .2s}
+    .btn-reset:hover,.btn-reset:focus-visible,
+    .btn-creator:hover,.btn-creator:focus-visible{color:var(--t2);outline:none}
 
     .interactive-card{
       cursor:pointer;
@@ -594,7 +596,10 @@
   </div>
   <div class="r-footer fu d7">
     <span class="r-foot-info" id="r-foot"></span>
-    <button class="btn-reset" id="btn-reset" onclick="resetBday()"></button>
+    <div class="footer-actions">
+      <button class="btn-creator" id="btn-creator" type="button" data-detail="creator"></button>
+      <button class="btn-reset" id="btn-reset" onclick="resetBday()"></button>
+    </div>
   </div>
 </div>
 
@@ -870,6 +875,7 @@ function applyStaticLang(){
   if($('oracle-lbl'))tx('oracle-lbl',L.oracleLbl);
   if($('sug-lbl')) tx('sug-lbl',   L.sugLbl);
   if($('btn-reset'))tx('btn-reset', L.changeBtn);
+  if($('btn-creator'))tx('btn-creator', L.creatorBtn);
   if($('date-prev'))tx('date-prev', L.prevDay);
   if($('date-next'))tx('date-next', L.nextDay);
   if($('date-today'))tx('date-today', L.todayBtn);
@@ -1344,6 +1350,17 @@ function buildSuggestionDetail(){
   };
 }
 
+function buildCreatorDetail(){
+  const L=LANG[lang];
+  return{
+    kicker:L.creatorKicker,
+    title:L.creatorTitle,
+    subtitle:'',
+    facts:[],
+    paragraphs:[L.creatorCopy]
+  };
+}
+
 function getDetailPayload(type,key){
   if(!readingState)return null;
   switch(type){
@@ -1357,6 +1374,7 @@ function getDetailPayload(type,key){
     case 'category': return buildCategoryDetail(key);
     case 'oracle': return buildOracleDetail();
     case 'suggestion': return buildSuggestionDetail();
+    case 'creator': return buildCreatorDetail();
     default: return null;
   }
 }
