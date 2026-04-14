@@ -115,11 +115,11 @@ function parseDateInput(value){
 | 现状 | 建议 |
 |------|------|
 | `index.html` 1,555 行，HTML + CSS + JS 混合 | 拆分为 `index.html` / `app.css` / `app.js` |
-| `content.js` 1,744 行，EN/ZH 完整并列 | 拆分 `content.en.js` + `content.zh.js`，按需加载 |
+| `content.js` 1,744 行，EN/ZH 完整并列 | 拆分 `content.en.js` + `content.zh.js`，独立缓存 |
 
-> 当前零构建工具的选择非常合理，拆文件不需要引入 bundler，直接 `<script src>` 即可。
+> 零构建工具的选择非常合理，拆文件不需要引入 bundler，直接 `<script src>` 即可。
 
-⏸ 未处理 — 当前规模维护成本可接受，列为远期可选项
+✅ 已修复 — `index.html` 从 1,630 行缩减至 110 行（纯 HTML 结构）；CSS 提取至 `app.css`（558 行）；JS 提取至 `app.js`（968 行）；`content.js` 拆分为 `content.en.js`（876 行）+ `content.zh.js`（868 行），两者独立缓存，任意一侧内容更新不影响另一侧缓存有效性。`sw.js` 同步更新缓存列表
 
 ---
 
@@ -188,7 +188,7 @@ function parseDateInput(value){
 - 英文 `readingTitles` 有 5 条随机标题，建议中文也对应补充 5 条（现有数量需核实）
 - `rLbls[0]` 为空字符串（分数0保留），实际上1是最低分，建议确认此逻辑是否刻意
 
-⏸ 未处理 — 待核实中文 readingTitles 数量
+✅ 已核实 — 中文 `readingTitles` 已有 5 条（「今日星盘解读」「星辰有话说」「神谕降临」「宇宙预言」「今日运势」），与英文对齐。`rLbls[0]` 为空字符串属刻意设计，分数从 1 起算，0 为内部保留位
 
 ---
 
@@ -209,8 +209,8 @@ function parseDateInput(value){
 | 🟢 可选 | `$()` / `tx()` 加 JSDoc 注释 | 2行注释 | ✅ 已修复 |
 | 🟢 可选 | 英文文案微调（rLbls、onboarding） | 逐条替换 | ✅ 已修复 |
 | 🟢 可选 | 中文文案微调（onboarding、resetMsg） | 逐条替换 | ✅ 已修复 |
-| 🟢 远期 | `renderReading()` 差量 DOM 更新 | 中等 | ⏸ 未处理 |
-| 🟢 远期 | 拆分 index.html / content.js | 中等 | ⏸ 未处理 |
+| 🟢 可选 | `renderReading()` 差量 DOM 更新 | 中等 | ✅ 已修复 |
+| 🟢 可选 | 拆分 index.html / content.js | 中等 | ✅ 已修复 |
 
 ---
 

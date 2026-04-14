@@ -21,7 +21,7 @@ const LANG = {
     creatorBtn:  "Creator: meltcado 🥑",
     creatorKicker:"Creator",
     creatorTitle:"Why Meltcado 😜",
-    creatorCopy: "Because avocados are always one degree away from peak — or past it.",
+    creatorCopy: "Because avocados always feel like they are quietly on the edge of melting.",
     prevDay:     "Previous",
     nextDay:     "Next",
     todayBtn:    "Today",
