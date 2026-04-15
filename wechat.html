@@ -23,7 +23,9 @@
   </style>
   <script>
     (function loadAnalytics() {
-      if (localStorage.getItem('cosmic_analytics_opt_out') === '1') return;
+      try {
+        if (localStorage.getItem('cosmic_analytics_opt_out') === '1') return;
+      } catch (e) {}
       var script = document.createElement('script');
       script.defer = true;
       script.src = 'https://static.cloudflareinsights.com/beacon.min.js';

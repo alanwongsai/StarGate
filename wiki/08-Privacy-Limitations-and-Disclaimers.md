@@ -14,7 +14,15 @@ cosmic_lang   语言偏好
 cosmic_theme  主题偏好
 ```
 
+使用 `owner.html` 测试入口时，页面还会在当前浏览器写入 `cosmic_analytics_opt_out=1`，用于跳过 Cloudflare Web Analytics。
+
 这些数据只存在于用户当前浏览器和设备中。
+
+## 匿名访问统计
+
+应用使用 Cloudflare Web Analytics 记录匿名访问统计，用于了解页面访问量、访客趋势、来源和设备类型等基础信息。
+
+应用没有自定义后端。生日、语言偏好、主题偏好和生成的每日解读内容不会由本应用发送给 Cloudflare。
 
 ## 不收集的内容
 
@@ -24,7 +32,6 @@ V1 不收集：
 - 邮箱。
 - 账号。
 - 位置信息。
-- 分析统计。
 - 支付信息。
 - 云端历史记录。
 
